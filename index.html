@@ -184,6 +184,9 @@
   .detail ul.outcomes { margin: 4px 0 0; padding-left: 18px; font-size: 13.5px; }
   .detail ul.outcomes li { margin-bottom: 3px; }
   .srcnote { color: var(--ink-muted); font-size: 12px; }
+  a.srclink { color: var(--ink-2); font-size: 12px; text-decoration: underline; text-underline-offset: 2px; }
+  a.srclink:hover { color: var(--ink); }
+  .conf { font-size: 11px; color: var(--ink-muted); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; margin-left: 4px; vertical-align: 1px; }
 
   h2.sect { font-size: 17px; margin: 28px 0 4px; }
   p.sect-sub { margin: 0 0 12px; color: var(--ink-2); font-size: 13.5px; max-width: 76ch; }
@@ -244,8 +247,9 @@
     <div class="step">
       <div class="k">2 · Practice</div>
       <h3>What does openBIM deliver?</h3>
-      <p>Documented, sourced project results — cost, time and carbon savings from real projects
-      (buildingSMART Awards case studies). Shown as orange markers on the map.</p>
+      <p>Documented project results — cost, time and carbon savings from real projects,
+      mostly buildingSMART Awards case studies, each linked to its source. Shown as orange
+      markers on the map.</p>
     </div>
     <div class="step">
       <div class="k">3 · The link</div>
@@ -255,8 +259,10 @@
     </div>
   </div>
 
-  <p class="databanner">
-    ⚠&#xFE0E;&nbsp; Prototype data — mandate statuses and case outcomes summarised from the project deck and public sources; not yet independently verified or dated to a common reference point.
+  <p class="sect-sub" style="margin-bottom:16px">
+    Every claim on this page carries its source — click any country for its mandate details,
+    effective dates and source links. Compiled July 2026 from official programme documents,
+    legislation and buildingSMART publications (full list in the footer).
   </p>
 
   <div class="controls">
@@ -286,8 +292,9 @@
   <h2 class="sect">The correlation, counted</h2>
   <p class="sect-sub">
     Take every documented value case and ask: what is the mandate status where it happened?
-    If open-standards policy and project value were unrelated, the cases would scatter evenly.
-    They don't — they concentrate where openBIM is required.
+    If open-standards policy and project value were unrelated, the cases would scatter across
+    all four rows. They don't — every case sits in a jurisdiction where openBIM is required
+    or a mandate is phasing in.
   </p>
   <div class="tiles" id="tiles"></div>
   <div class="corr-grid">
@@ -305,11 +312,17 @@
   </details>
 
   <footer class="site">
-    Working mockup for the openBIM data project. Mandate summaries: project deck
-    (“Some openBIM business value and mandates examples”), buildingSMART Global IFC Mandates
-    (2024 edition), Strategic Building Innovation studies, national programme announcements.
-    Value cases: buildingSMART International Awards case studies. Countries not coloured have no
-    programme tracked <em>yet</em> — absence of colour is absence of research, not proof of absence.
+    <strong style="color:var(--ink-2)">Sources.</strong> Every jurisdiction's status links its own
+    source in the country card — official decrees, programme sites and legislation where available,
+    flagged when only secondary reporting was found. Cross-cutting references:
+    <a class="srclink" href="https://www.buildingsmart.org/wp-content/uploads/2025/03/IFC-Mandate_2025.pdf">Global openBIM Mandates — 2025 edition (buildingSMART)</a> ·
+    <a class="srclink" href="https://www.buildingsmart.org/openbim-awards-program/">bSI openBIM Awards program</a> ·
+    <a class="srclink" href="https://www.buildingsmart.org/wp-content/uploads/2025/04/bSI_Awards_Yearbook_2024.pdf">bSI Awards Yearbook 2024</a> ·
+    <a class="srclink" href="https://globalbim.org/">Global BIM Network country collection</a>.
+    Statuses compiled July 2026; mandates change — each claim shows its effective date.
+    Uncoloured countries had no programme found in this research pass; absence of colour is
+    absence of evidence, not proof of absence. Two case figures marked “needs verification”
+    await a primary document.
   </footer>
 </div>
 
@@ -328,107 +341,271 @@ const py = lat => (LAT1 - lat) / (LAT1 - LAT0) * H;
 const LEVELS = ["None tracked", "Voluntary / guidelines", "Partial / phasing in", "Required"];
 const DATA = [
   { iso:"GB", id:"826", name:"United Kingdom", region:"Europe", lat:53.8, lon:-2.2,
-    proc:{l:3, since:"2016", note:"BIM Level 2 → ISO 19650 on centrally procured public projects"}, perm:{l:0} },
+    proc:{l:3, since:"2016", note:"BIM Level 2 (now ISO 19650) on centrally procured government projects; not IFC-specific",
+      src:{t:"Government Construction Strategy 2016–20 (GOV.UK)", u:"https://assets.publishing.service.gov.uk/media/5a80ac49ed915d74e622fca7/Government_Construction_Strategy_2016-20.pdf", c:"high"}},
+    perm:{l:0} },
   { iso:"IE", id:"372", name:"Ireland", region:"Europe", lat:53.2, lon:-8,
-    proc:{l:2, since:"2024", note:"Public works, phased by project size"}, perm:{l:0} },
+    proc:{l:2, since:"2024", note:"BIM in Capital Works Management Framework: phased from >€100M (2024) to all public projects by 2028",
+      src:{t:"BIM requirements in the CWMF (cwmf.gov.ie)", u:"https://cwmf.gov.ie/en/news/bim-requirements-in-the-cwmf-from-january-2024/", c:"high"}},
+    perm:{l:0} },
   { iso:"NO", id:"578", name:"Norway", region:"Europe", lat:61, lon:9,
-    proc:{l:3, since:"2010", note:"Statsbygg requires IFC on public buildings"}, perm:{l:1, note:"Digital permit platform pilots"},
-    cases:[{ title:"Coastal highway programme — parametric openBIM delivery", stat:"95%", statnote:"fewer drawings across 800 discipline models",
-      outcomes:["15-mile coastal highway: 5 tunnels, major interchanges, bridges","Goal: −20% construction carbon, pursued via parametric models","Drawing count reduced by 95%"], src:"bSI community case, Norway" }] },
+    proc:{l:2, since:"2010", note:"Agency-level: Statsbygg requires openBIM/IFC deliverables (SIMBA); road/rail agencies have model requirements; no statutory mandate",
+      src:{t:"Statsbygg BIM Manual / SIMBA requirements", u:"https://dok.statsbygg.no/wp-content/uploads/2020/06/statsbyggs-bim-manual-1-2-1_en_20131217.pdf", c:"high"}},
+    perm:{l:1, note:"Digital permit platform pilots"},
+    cases:[{ title:"E39 coastal highway (Kristiansand–Mandal) — parametric openBIM delivery", stat:"95%", statnote:"fewer drawings across 800 discipline models",
+      outcomes:["15-mile highway: five tunnels, major interchanges, bridges","Goal: −20% construction carbon, pursued via parametric modelling","Traditional drawings reduced by 95%"],
+      src:"Norconsult / Nye Veier case study", url:"https://aps.autodesk.com/platform-stories/norconsult", conf:"medium" }] },
   { iso:"SE", id:"752", name:"Sweden", region:"Europe", lat:62, lon:15,
-    proc:{l:2, since:"2015", note:"Trafikverket requires BIM on infrastructure"}, perm:{l:0} },
+    proc:{l:2, since:"2015", note:"Agency-level: Trafikverket requires object-oriented BIM models in investment project procurements",
+      src:{t:"Trafikverket BIM (TDOK 2015:0181) — Global BIM Network", u:"https://globalbim.org/info-collection/swedish-transport-administration-bim-website/", c:"medium"}},
+    perm:{l:0} },
   { iso:"FI", id:"246", name:"Finland", region:"Europe", lat:62.5, lon:26,
-    proc:{l:3, since:"2007", note:"Senate Properties (COBIM guidelines); IFC required"},
-    perm:{l:3, since:"2025", note:"IFC required for permit submission by decree; as-built IFC archived in National Building Information System from 2027; Cloudpermit/Solibri checking"},
-    cases:[{ title:"openBIM impact estimate (bSF chairman)", stat:"$6M", statnote:"estimated savings on a $140M project",
-      outcomes:["≈4% of project cost saved through openBIM workflows"], src:"buildingSMART Finland" }] },
+    proc:{l:2, since:"2007", note:"Agency-level: Senate Properties requires IFC models since 2007; COBIM national guidelines",
+      src:{t:"Senate Properties BIM requirements", u:"https://www.solibri.com/articles/senate-properties-bim-requirements", c:"medium"}},
+    perm:{l:3, since:"2026", note:"New Building Act: permit plans in machine-readable form (IFC 4.3) from 1 Jan 2026; detached houses exempt",
+      src:{t:"Building Act 751/2023 + MoE decree — Construction Industry RT", u:"https://rt.fi/en/tiedotteet-ja-uutiset/2026/01/rakentamisen-uudet-saannot-2026-katso-mika-kaikki-muuttuu/", c:"medium"}},
+    cases:[{ title:"openBIM impact estimate (buildingSMART Finland chairman)", stat:"$6M", statnote:"estimated savings on a $140M project",
+      outcomes:["≈4% of project cost saved through openBIM workflows"],
+      src:"Autodesk interview, T. Savolainen", url:"https://www.autodesk.com/design-make/articles/openbim", conf:"low" }] },
   { iso:"DK", id:"208", name:"Denmark", region:"Europe", lat:56, lon:9.5,
-    proc:{l:3, since:"2007", note:"ICT Regulations 118 & 119: IFC in all public & publicly-funded project bids and design from 2023"}, perm:{l:0},
-    cases:[{ title:"Copenhagen M5 Metro — conceptual design validation", stat:"−50%", statnote:"carbon vs baseline; IFC 4.3 + bSDD + IDS",
-      outcomes:["~12–14 km twin tunnel, 10 stations","EIA design cut footprint 18%; >50% carbon saving vs baseline","Cost savings improved project ROI"], src:"bSI Award 2024 winner" }] },
+    proc:{l:3, since:"2013", note:"ICT Regulations 118 & 119: BIM and IFC in state and publicly funded construction >DKK 5M (first rules 2007)",
+      src:{t:"The ICT regulation — Danish Building and Property Agency", u:"https://en.bygst.dk/construction/digital-construction/the-ict-regulation/", c:"high"}},
+    perm:{l:0},
+    cases:[{ title:"Copenhagen M5 Metro — conceptual design data validation", stat:"−50%", statnote:"carbon vs baseline; IFC 4.3 + bSDD + IDS",
+      outcomes:["~12–14 km twin tunnel, 10 stations","EIA design cut footprint 18%; >50% carbon saving vs baseline","Cost savings improved project ROI"],
+      src:"bSI openBIM Awards 2024 winner", url:"https://www.buildingsmart.org/the-buildingsmart-openbim-awards-2024-winners-announced/", conf:"high" }] },
   { iso:"NL", id:"528", name:"Netherlands", region:"Europe", lat:52.2, lon:5.5,
-    proc:{l:3, since:"2012", note:"Rijkswaterstaat & central government estate"}, perm:{l:0} },
-  { iso:"BE", id:"056", name:"Belgium", region:"Europe", lat:50.6, lon:4.5, proc:{l:1, note:"Sector protocols"}, perm:{l:0} },
-  { iso:"LU", id:"442", name:"Luxembourg", region:"Europe", lat:49.7, lon:6.1, proc:{l:1, note:"National guidelines"}, perm:{l:0} },
+    proc:{l:2, since:"2012", note:"Agency-level: Rijkswaterstaat contract requirements and RVB BIM Norm (IFC); no statutory mandate",
+      src:{t:"RVB BIM Norm — Rijksvastgoedbedrijf", u:"https://www.rijksvastgoedbedrijf.nl/binaries/rijksvastgoedbedrijf/documenten/richtlijn/2014/06/20/rvb-bim-norm-v1.1/RVB_BIM_Norm_v1.1.pdf", c:"high"}},
+    perm:{l:0} },
+  { iso:"BE", id:"056", name:"Belgium", region:"Europe", lat:50.6, lon:4.5,
+    proc:{l:1, note:"Buildwise/BIMportal guidelines; some Flemish road contracts include BIM clauses",
+      src:{t:"Belgium — Global BIM Network", u:"https://globalbim.org/news/info-country/belgium/", c:"medium"}},
+    perm:{l:0} },
+  { iso:"LU", id:"442", name:"Luxembourg", region:"Europe", lat:49.7, lon:6.1,
+    proc:{l:1, since:"2018", note:"CRTI-B Guide d'application BIM; state clients apply BIM on pilots",
+      src:{t:"Guide d'application BIM — CRTI-B", u:"https://www.crtib.lu/fr/actualites/publication-guide-dapplication-bim-luxembourg", c:"medium"}},
+    perm:{l:0} },
   { iso:"DE", id:"276", name:"Germany", region:"Europe", lat:51, lon:10,
-    proc:{l:3, since:"2020", note:"Federal infrastructure; federal buildings phasing"}, perm:{l:1, note:"Digital permit pilots (länder level)"},
+    proc:{l:2, since:"2020", note:"BIM mandatory on federal transport infrastructure (Dec 2020); federal buildings phased 2022–2027 (Masterplan BIM)",
+      src:{t:"Masterplan BIM für Bundesbauten (BMI)", u:"https://www.bmi.bund.de/SharedDocs/downloads/DE/veroeffentlichungen/2021/10/masterplan-bim.pdf", c:"high"}},
+    perm:{l:1, note:"Digital building-application pilots at Länder level; no IFC permit mandate"},
     cases:[{ title:"smartBRIDGE Hamburg — openBIM digital twin", stat:"10,000+", statnote:"IFC objects driving predictive maintenance",
-      outcomes:["3.6 km bridge (1974) with IoT-linked digital twin","From reactive inspection to predictive maintenance","200+ attributes structured in a CDE"], src:"bSI Award 2021 winner" }] },
-  { iso:"FR", id:"250", name:"France", region:"Europe", lat:46.5, lon:2.5, proc:{l:1, note:"Plan BIM 2022 — incentives, no mandate"}, perm:{l:0} },
-  { iso:"ES", id:"724", name:"Spain", region:"Europe", lat:40.2, lon:-3.7, proc:{l:3, since:"2018", note:"Public tenders; 2024 plan widens scope"}, perm:{l:0} },
-  { iso:"PT", id:"620", name:"Portugal", region:"Europe", lat:39.5, lon:-8, proc:{l:1, note:"Voluntary, technical committee guidance"}, perm:{l:0} },
-  { iso:"IT", id:"380", name:"Italy", region:"Europe", lat:42.8, lon:12.5, proc:{l:3, since:"2019", note:"D.M. 560/2017 phased; all public works from 2025"}, perm:{l:0} },
-  { iso:"CH", id:"756", name:"Switzerland", region:"Europe", lat:46.8, lon:8.2, proc:{l:1, note:"KBOB / SBB client guidance"}, perm:{l:0} },
-  { iso:"AT", id:"040", name:"Austria", region:"Europe", lat:47.5, lon:14.5, proc:{l:1, note:"ÖNORM standards, voluntary"}, perm:{l:0} },
-  { iso:"CZ", id:"203", name:"Czechia", region:"Europe", lat:49.8, lon:15.5, proc:{l:2, since:"2023", note:"Above-threshold public contracts, timeline shifting"}, perm:{l:0} },
-  { iso:"PL", id:"616", name:"Poland", region:"Europe", lat:52, lon:19, proc:{l:1, note:"Roadmap published, mandate deferred"}, perm:{l:0} },
+      outcomes:["3.6 km bridge (1974) with IoT-linked digital twin","From reactive inspection to predictive maintenance","200+ attributes structured in a CDE"],
+      src:"bSI Awards 2021 winner", url:"https://www.buildingsmart.org/award-winners-2021/", conf:"high" }] },
+  { iso:"FR", id:"250", name:"France", region:"Europe", lat:46.5, lon:2.5,
+    proc:{l:1, since:"2017", note:"Plan BIM 2022 and voluntary charters; deliberate no-mandate policy",
+      src:{t:"Plan BIM 2022 — site officiel", u:"https://plan-bim-2022.fr/", c:"high"}},
+    perm:{l:0} },
+  { iso:"ES", id:"724", name:"Spain", region:"Europe", lat:40.2, lon:-3.7,
+    proc:{l:2, since:"2024", note:"Plan BIM: mandatory in state contracts ≥€5.4M from Apr 2024, thresholds tighten to 2030",
+      src:{t:"Plan BIM en la contratación pública — Comisión Interministerial BIM", u:"https://cibim.transportes.gob.es/sala-de-prensa/noticias/el-plan-bim-en-la-contratacion-publica-en-vigor-desde-el-1-de-abril-instruye", c:"high"}},
+    perm:{l:0} },
+  { iso:"PT", id:"620", name:"Portugal", region:"Europe", lat:39.5, lon:-8,
+    proc:{l:2, since:"2026", note:"PortugalBIM national strategy (RCM 89/2026): six-year public-procurement BIM roadmap",
+      src:{t:"Resolução do Conselho de Ministros 89/2026 — Diário da República", u:"https://diariodarepublica.pt/dr/detalhe/resolucao-conselho-ministros/89-2026-1124570660", c:"high"}},
+    perm:{l:2, since:"2030", note:"DL 10/2024 art. 17: BIM-modelled architectural projects for permits from 2030",
+      src:{t:"DL 10/2024 — Estratégia Nacional BIM (Sérvulo analysis)", u:"https://www.servulo.com/en/knowledge/A-Estrategia-Nacional-para-a-Implementacao-da-Metodologia-BIM/9768/", c:"medium"}} },
+  { iso:"IT", id:"380", name:"Italy", region:"Europe", lat:42.8, lon:12.5,
+    proc:{l:3, since:"2019", note:"D.M. 560/2017 phased mandate; BIM required for public works ≥€1M from 2025 (Code D.Lgs. 36/2023)",
+      src:{t:"Decreto Ministeriale 560/2017 — Ministero delle Infrastrutture", u:"https://www.mit.gov.it/normativa/decreto-ministeriale-numero-560-del-01122017", c:"high"}},
+    perm:{l:0} },
+  { iso:"CH", id:"756", name:"Switzerland", region:"Europe", lat:46.8, lon:8.2,
+    proc:{l:2, since:"2021", note:"Federal clients (SBB, FEDRO/KBOB sphere) require BIM: buildings 2021, infrastructure 2025; no statutory mandate",
+      src:{t:"BIM at SBB (Swiss Federal Railways)", u:"https://company.sbb.ch/en/the-company/projects/national-projects/bim.html", c:"medium"}},
+    perm:{l:0} },
+  { iso:"AT", id:"040", name:"Austria", region:"Europe", lat:47.5, lon:14.5,
+    proc:{l:1, note:"No legal mandate; ÖNORM A 6241 applied contractually by large public clients (BIG, ASFINAG, ÖBB)",
+      src:{t:"BIM law and regulation in Austria — CMS Expert Guide", u:"https://cms.law/en/int/expert-guides/cms-expert-guide-to-building-information-modelling-bim/austria", c:"high"}},
+    perm:{l:0} },
+  { iso:"CZ", id:"203", name:"Czechia", region:"Europe", lat:49.8, lon:15.5,
+    proc:{l:2, since:"2027", note:"BIM Act: BIM mandatory for public projects over CZK 135M from 1 Jan 2027 (earlier dates postponed)",
+      src:{t:"Czech BIM mandate for major public projects — EC Public Buyers Community", u:"https://public-buyers-community.ec.europa.eu/communities/bim-and-public-procurement/news/czech-republic-adopts-bim-mandate-major-public", c:"high"}},
+    perm:{l:0} },
+  { iso:"PL", id:"616", name:"Poland", region:"Europe", lat:52, lon:19,
+    proc:{l:1, note:"2020 roadmap proposed phased mandate 2025–2030; not enacted; BIM Standard PL handbook",
+      src:{t:"Poland — Global BIM Network", u:"https://globalbim.org/news/info-country/poland/", c:"medium"}},
+    perm:{l:0} },
   { iso:"EE", id:"233", name:"Estonia", region:"Europe", lat:58.7, lon:25.5,
-    proc:{l:2, since:"2025", note:"Phased public-sector requirements"}, perm:{l:2, note:"e-construction platform: digital permitting phasing in"} },
-  { iso:"LT", id:"440", name:"Lithuania", region:"Europe", lat:55.3, lon:24, proc:{l:2, since:"2025", note:"Public procurement, phased"}, perm:{l:0} },
-  { iso:"GR", id:"300", name:"Greece", region:"Europe", lat:39, lon:22, proc:{l:1, note:"Digital strategy, pilots"}, perm:{l:0} },
-  { iso:"TR", id:"792", name:"Türkiye", region:"Europe", lat:39, lon:35, proc:{l:1, note:"Agency-level guidance"}, perm:{l:0} },
-  { iso:"UA", id:"804", name:"Ukraine", region:"Europe", lat:49, lon:31, proc:{l:1, since:"2021", note:"National BIM concept adopted"}, perm:{l:0} },
+    proc:{l:1, note:"No mandate; state real-estate clients and e-construction programme promote BIM",
+      src:{t:"Digital construction — Estonian Ministry of Climate", u:"https://kliimaministeerium.ee/en/digital-construction", c:"high"}},
+    perm:{l:1, since:"2022", note:"Optional IFC model-based permit route with automated checks (e-ehitus/EHR) — an alternative, not compulsory",
+      src:{t:"BIM-based building permit process — e-ehitus", u:"https://eehitus.ee/timeline-post/bim-based-building-permit-process/", c:"high"}} },
+  { iso:"LT", id:"440", name:"Lithuania", region:"Europe", lat:55.3, lon:24,
+    proc:{l:2, since:"2024", note:"Government resolution mandates BIM requirements in defined larger public procurements",
+      src:{t:"BIM Mandate resolution — Global BIM Network", u:"https://globalbim.org/info-collection/bim-mandate-resolution-on-requirements-and-or-criteria-for-the-application-of-building-information-modelling-methods/", c:"medium"}},
+    perm:{l:0} },
+  { iso:"GR", id:"300", name:"Greece", region:"Europe", lat:39, lon:22,
+    proc:{l:1, note:"National BIM Strategy and Roadmap developed with DG REFORM; no mandate yet",
+      src:{t:"National BIM Strategy in Greece — European Commission (DG REFORM)", u:"https://reform-support.ec.europa.eu/what-we-do/digital-transition/establishment-and-promotion-national-bim-strategy-greece_en", c:"high"}},
+    perm:{l:0} },
+  { iso:"TR", id:"792", name:"Türkiye", region:"Europe", lat:39, lon:35,
+    proc:{l:2, since:"2014", note:"Agency-level requirements (Ministry of Transport rail since 2014; KGM, DHMİ, TOKİ specs)",
+      src:{t:"Construction Law 2025: Türkiye — Chambers Practice Guides", u:"https://practiceguides.chambers.com/practice-guides/construction-law-2025/trkiye/trends-and-developments", c:"medium"}},
+    perm:{l:2, note:"Law enables Ministry to require BIM-recorded permit documents for designated projects; rollout pending",
+      src:{t:"Construction Law Wrap Up 2024 — Turkish Law Blog", u:"https://turkishlawblog.com/insights/detail/construction-law-wrap-up-2024", c:"medium"}} },
+  { iso:"UA", id:"804", name:"Ukraine", region:"Europe", lat:49, lon:31,
+    proc:{l:2, since:"2021", note:"Cabinet concept (Feb 2021) phases in mandatory BIM on defined state-funded projects 2023–2030",
+      src:{t:"BIM implementation concept — European Business Association", u:"https://eba.com.ua/en/ukrayina-zaplanovano-vprovadzhennya-tehnologij-budivelnogo-informatsijnogo-modelyuvannya/", c:"medium"}},
+    perm:{l:0} },
   { iso:"RU", id:"643", name:"Russia", region:"Europe", lat:58, lon:45,
-    proc:{l:2, since:"2022", note:"State-funded projects, scope revised since"}, perm:{l:2, note:"Expertise report required to start construction; state information-model bank in development"} },
+    proc:{l:3, since:"2022", note:"Decree PP 331: information model mandatory for state-funded projects from 1 Jan 2022 (defence exempt)",
+      src:{t:"Postanovlenie Pravitelstva RF N 331 — ConsultantPlus", u:"https://www.consultant.ru/document/cons_doc_LAW_378847/", c:"high"}},
+    perm:{l:2, since:"2024", note:"TIM mandatory for shared-equity housing developers' design stage from 1 Jul 2024 (PP 2357)",
+      src:{t:"Perekhod na TIM obyazatelen s 1 iyulya 2024 — NIISF", u:"https://www.niisf.org/biblio/glavnaya/s-1-iyulya-2024-goda-perekhod-na-tim-stanet-obyazatelnym-dlya-stroitelnoj-otrasli", c:"medium"}} },
   { iso:"AE", id:"784", name:"United Arab Emirates", region:"Middle East & Africa", lat:24, lon:54.3,
-    proc:{l:1, note:"Client-level BIM requirements"}, perm:{l:3, since:"2024", note:"Dubai: 3D BIM optional, IFC/openBIM required for submission"} },
-  { iso:"SA", id:"682", name:"Saudi Arabia", region:"Middle East & Africa", lat:24, lon:45, proc:{l:1, note:"Contractual on giga-projects"}, perm:{l:0} },
-  { iso:"QA", id:"634", name:"Qatar", region:"Middle East & Africa", lat:25.3, lon:51.2, proc:{l:1, note:"Client-level requirements (Ashghal)"}, perm:{l:0} },
-  { iso:"IL", id:"376", name:"Israel", region:"Middle East & Africa", lat:31.5, lon:35, proc:{l:1, note:"Government pilots and guidance"}, perm:{l:0} },
-  { iso:"ZA", id:"710", name:"South Africa", region:"Middle East & Africa", lat:-29, lon:24.5, proc:{l:1, note:"Industry protocols, voluntary"}, perm:{l:0} },
-  { iso:"EG", id:"818", name:"Egypt", region:"Middle East & Africa", lat:26.5, lon:29.5, proc:{l:0}, perm:{l:0} },
-  { iso:"MA", id:"504", name:"Morocco", region:"Middle East & Africa", lat:31.8, lon:-6.5, proc:{l:0}, perm:{l:0} },
-  { iso:"NG", id:"566", name:"Nigeria", region:"Middle East & Africa", lat:9.5, lon:8, proc:{l:0}, perm:{l:0} },
-  { iso:"KE", id:"404", name:"Kenya", region:"Middle East & Africa", lat:0.5, lon:37.8, proc:{l:0}, perm:{l:0} },
-  { iso:"GH", id:"288", name:"Ghana", region:"Middle East & Africa", lat:7.9, lon:-1.2, proc:{l:0}, perm:{l:0} },
-  { iso:"ET", id:"231", name:"Ethiopia", region:"Middle East & Africa", lat:9, lon:39.5, proc:{l:0}, perm:{l:0} },
+    proc:{l:2, since:"2013", note:"No federal mandate; Dubai and other emirate/government clients require BIM on major projects (DM circulars 196/2013, 207/2015)",
+      src:{t:"BIM law and regulation in the UAE — CMS Expert Guide", u:"https://cms.law/en/int/expert-guides/cms-expert-guide-to-building-information-modelling-bim/united-arab-emirates", c:"high"}},
+    perm:{l:2, since:"2024", note:"Dubai: IFC BIM permit submission mandatory for tall/large/special buildings from 1 Jan 2024 (ISO 19650/IFC/IDS/BCF)",
+      src:{t:"Global openBIM Mandates 2025 — buildingSMART International", u:"https://www.buildingsmart.org/wp-content/uploads/2025/03/IFC-Mandate_2025.pdf", c:"high"}} },
+  { iso:"SA", id:"682", name:"Saudi Arabia", region:"Middle East & Africa", lat:24, lon:45,
+    proc:{l:2, note:"MOMRAH BIM Level 2 on major public projects; giga-project clients require ISO 19650 contractually",
+      src:{t:"Saudi Arabia BIM and Vision 2030 — OmTrak", u:"https://www.omtrak.com/en-ae/saudi-arabia-bim-mandate-vision-2030/", c:"low"}},
+    perm:{l:0} },
+  { iso:"QA", id:"634", name:"Qatar", region:"Middle East & Africa", lat:25.3, lon:51.2,
+    proc:{l:2, note:"Ashghal (Public Works Authority) mandates BIM per ABIMS/ISO 19650 on its projects; no national mandate",
+      src:{t:"Ashghal BIM Standards (ABIMS) — official guide", u:"https://www.ashghal.gov.qa/en/Services/GIS%20and%20CAD%20Manuals/ASHGHAL%20BIM%20STANDARD/D0601_Modelling%20and%20Data%20Management%20Guide_V1.pdf", c:"high"}},
+    perm:{l:0} },
+  { iso:"IL", id:"376", name:"Israel", region:"Middle East & Africa", lat:31.5, lon:35,
+    proc:{l:1, note:"National ISO 19650 implementation; agency-level BIM in tenders (e.g. Netivei Israel); no statutory mandate",
+      src:{t:"Israel — national ISO 19650 implementation — Global BIM Network", u:"https://www.globalbim.org/info-collection/israel-national-implementation-of-iso-19650-standard/", c:"medium"}},
+    perm:{l:0} },
+  { iso:"ZA", id:"710", name:"South Africa", region:"Middle East & Africa", lat:-29, lon:24.5,
+    proc:{l:1, note:"No mandate; National BIM Framework committed at 2025 National Construction Summit (CIDB)",
+      src:{t:"National Construction Summit 2025 Declaration — CIDB", u:"https://www.cidb.org.za/wp-content/uploads/2025/11/2025-National-Construction-Summit-Declaration.pdf", c:"medium"}},
+    perm:{l:0} },
+  { iso:"EG", id:"818", name:"Egypt", region:"Middle East & Africa", lat:26.5, lon:29.5,
+    proc:{l:0, note:"No national programme found (Jul 2026 search); BIM used on megaprojects by client choice"}, perm:{l:0} },
+  { iso:"MA", id:"504", name:"Morocco", region:"Middle East & Africa", lat:31.8, lon:-6.5,
+    proc:{l:0, note:"No national programme found (Jul 2026 search)"}, perm:{l:0} },
+  { iso:"NG", id:"566", name:"Nigeria", region:"Middle East & Africa", lat:9.5, lon:8,
+    proc:{l:0, note:"No approved national BIM policy found (Jul 2026 search)"}, perm:{l:0} },
+  { iso:"KE", id:"404", name:"Kenya", region:"Middle East & Africa", lat:0.5, lon:37.8,
+    proc:{l:0, note:"No mandate found (Jul 2026 search)"}, perm:{l:0} },
+  { iso:"GH", id:"288", name:"Ghana", region:"Middle East & Africa", lat:7.9, lon:-1.2,
+    proc:{l:0, note:"No national programme found; 2018 Building Code has no BIM/IFC requirement"}, perm:{l:0} },
+  { iso:"ET", id:"231", name:"Ethiopia", region:"Middle East & Africa", lat:9, lon:39.5,
+    proc:{l:0, note:"No national programme found (Jul 2026 search)"}, perm:{l:0} },
   { iso:"SG", id:null, name:"Singapore", region:"Asia-Pacific", lat:1.35, lon:103.8,
-    proc:{l:1, note:"Public clients drive Integrated Digital Delivery"},
-    perm:{l:3, since:"2025", note:"CORENET-X: voluntary IFC submissions 2024, required from 2025 for projects >30,000 m²"},
-    cases:[{ title:"openBIM impacts across public projects", stat:"90%", statnote:"time saving on design collaboration & approvals",
-      outcomes:["80%+ time saving reporting safety incidents & defects","30–40% faster issue resolution"], src:"bSI / JTC case studies" }] },
-  { iso:"MY", id:"458", name:"Malaysia", region:"Asia-Pacific", lat:3.8, lon:102, proc:{l:2, since:"2019", note:"JKR mandate on larger public projects"}, perm:{l:0} },
-  { iso:"TH", id:"764", name:"Thailand", region:"Asia-Pacific", lat:15.5, lon:101, proc:{l:1, note:"Industry guidelines"}, perm:{l:0} },
-  { iso:"VN", id:"704", name:"Vietnam", region:"Asia-Pacific", lat:16.5, lon:106.3, proc:{l:2, since:"2023", note:"Phased mandate on public investment projects"}, perm:{l:0} },
-  { iso:"ID", id:"360", name:"Indonesia", region:"Asia-Pacific", lat:-2.5, lon:113.5, proc:{l:1, note:"Regulation for government buildings, partial"}, perm:{l:0} },
-  { iso:"PH", id:"608", name:"Philippines", region:"Asia-Pacific", lat:13, lon:122, proc:{l:1, note:"Agency pilots"}, perm:{l:0} },
-  { iso:"IN", id:"356", name:"India", region:"Asia-Pacific", lat:22, lon:79, proc:{l:1, note:"Guidelines; required on metro & major transport"}, perm:{l:0} },
+    proc:{l:2, since:"2015", note:"Public agencies (HDB, LTA, JTC) require BIM/IDD deliverables; no single procurement decree",
+      src:{t:"CORENET X BIM requirements and timeline", u:"https://www.bimeco.io/blog/corenet-guide-singapore/", c:"medium"}},
+    perm:{l:3, since:"2025", note:"BIM e-submission since 2015 (>5,000 m²); CORENET-X IFC-SG mandatory >30,000 m² Oct 2025, all new projects Oct 2026",
+      src:{t:"BCA circular: mandatory submissions via CORENET X", u:"https://info.corenet.gov.sg/docs/default-source/bca-circulars/circular-for-corenet-x-implementation-2025464fd83c-24ac-473b-bd7d-83c4048f8d36.pdf", c:"high"}},
+    cases:[{ title:"openBIM impacts across public projects (JTC/BCA)", stat:"90%", statnote:"time saving on design collaboration & approvals",
+      outcomes:["80%+ time saving reporting safety incidents & defects","30–40% faster issue resolution"],
+      src:"bSI Industry Insight / JTC", url:"https://www.buildingsmart.org/wp-content/uploads/2026/03/Construction-openBIM_Industry_Insight_bSI_final.pdf", conf:"low" }] },
+  { iso:"MY", id:"458", name:"Malaysia", region:"Asia-Pacific", lat:3.8, lon:102,
+    proc:{l:3, since:"2019", note:"Public projects ≥RM100M since 2019; threshold lowered to RM10M from July 2025",
+      src:{t:"BIM in Malaysia — CIDB SMART", u:"https://smart.cidb.gov.my/article/bim-in-malaysia-a-constructive-journey-41", c:"medium"}},
+    perm:{l:0} },
+  { iso:"TH", id:"764", name:"Thailand", region:"Asia-Pacific", lat:15.5, lon:101,
+    proc:{l:1, since:"2017", note:"Industry (EIT) BIM guideline; BIM appears in some agency terms of reference only",
+      src:{t:"Study of BIM requirements in TORs for government projects", u:"https://so05.tci-thaijo.org/index.php/sarasatr/article/view/259125", c:"low"}},
+    perm:{l:0} },
+  { iso:"VN", id:"704", name:"Vietnam", region:"Asia-Pacific", lat:16.5, lon:106.3,
+    proc:{l:2, since:"2023", note:"Decision 258/QĐ-TTg: grade I/special projects from 2023–24; grade II from 2025–26; universal by 2030",
+      src:{t:"Decision 258/QĐ-TTg 2023 (LuatVietnam)", u:"https://english.luatvietnam.vn/xay-dung/decision-258-qd-ttg-2023-application-of-building-information-modeling-in-construction-activities-246386-d1.html", c:"high"}},
+    perm:{l:2, since:"2023", note:"Same decision: BIM file required at design appraisal, permit and acceptance for covered project grades",
+      src:{t:"Decision 258/QĐ-TTg 2023 (LuatVietnam)", u:"https://english.luatvietnam.vn/xay-dung/decision-258-qd-ttg-2023-application-of-building-information-modeling-in-construction-activities-246386-d1.html", c:"high"}} },
+  { iso:"ID", id:"360", name:"Indonesia", region:"Asia-Pacific", lat:-2.5, lon:113.5,
+    proc:{l:2, since:"2018", note:"Permen PUPR 22/2018: BIM for non-simple state buildings >2,000 m² or >2 storeys",
+      src:{t:"Permen PUPR No. 22/PRT/M/2018 (official database)", u:"https://peraturan.bpk.go.id/Details/159730/permen-pupr-no-22prtm2018-tahun-2018", c:"high"}},
+    perm:{l:0} },
+  { iso:"PH", id:"608", name:"Philippines", region:"Asia-Pacific", lat:13, lon:122,
+    proc:{l:1, since:"2020", note:"DPWH BIM roadmap and guidelines; no mandatory procurement policy",
+      src:{t:"BIM adoption in Philippine public-sector construction (IRE Journals)", u:"https://www.irejournals.com/formatedpaper/1712537.pdf", c:"low"}},
+    perm:{l:0} },
+  { iso:"IN", id:"356", name:"India", region:"Asia-Pacific", lat:22, lon:79,
+    proc:{l:2, since:"2024", note:"Agency-level: CPWD BIM guidelines/mandate for larger central projects; NHAI, metros require digital delivery",
+      src:{t:"Government BIM mandates in India (CPWD/NHAI overview)", u:"https://www.primaversity.com/post/complete-guide-to-government-bim-mandates-in-india-cpwd-nhai-smart-cities-projects-bim-mandate", c:"low"}},
+    perm:{l:0} },
   { iso:"CN", id:"156", name:"China", region:"Asia-Pacific", lat:35, lon:104,
-    proc:{l:1, note:"National guidelines, provincial mandates vary"}, perm:{l:0},
+    proc:{l:2, since:"2023", note:"No national mandate; city/province mandates — e.g. Shenzhen government-investment projects from 2023",
+      src:{t:"BIM implementation in Hong Kong and China — ADB", u:"https://www.adb.org/sites/default/files/publication/990526/adbi-bim-implementation-hong-kong-china-policies-drivers-hurdles-and-prospects.pdf", c:"medium"}},
+    perm:{l:1, since:"2023", note:"City-level BIM permit-review pilots (Shenzhen, Xiong'an); no national requirement",
+      src:{t:"BIM implementation in Hong Kong and China — ADB", u:"https://www.adb.org/sites/default/files/publication/990526/adbi-bim-implementation-hong-kong-china-policies-drivers-hurdles-and-prospects.pdf", c:"medium"}},
     cases:[{ title:"Guiyang–Nanning high-speed railway", stat:"$2.75M", statnote:"saved; construction 35 days shorter",
-      outcomes:["≈480 km line, $10.4B investment","Design alterations reduced 50×","IFC, IDM, IDS, BCF, bSDD, MVD in delivery"], src:"bSI Award 2024 finalist" }] },
+      outcomes:["≈480 km line, $10.4B investment","Design alterations reduced 50×","IFC, IDM, IDS, BCF, bSDD, MVD in delivery"],
+      src:"bSI openBIM Awards 2024 finalist", url:"https://www.buildingsmart.org/openbim-awards-2024-finalists-announced/", conf:"high" }] },
   { iso:"HK", id:null, name:"Hong Kong SAR", region:"Asia-Pacific", lat:22.3, lon:114.2,
-    proc:{l:3, since:"2018", note:"Government capital works over HK$30M"}, perm:{l:1, note:"BIM in building-plan submissions being phased"},
+    proc:{l:3, since:"2018", note:"BIM mandatory on major government capital works >HK$30M (DEVB technical circulars)",
+      src:{t:"DEVB Technical Circular (Works) No. 18/2018", u:"https://www.devb.gov.hk/filemanager/technicalcirculars/en/upload/366/1/C-2018-18-01.pdf", c:"high"}},
+    perm:{l:1, since:"2024", note:"Buildings Department guidelines encourage BIM statutory submissions; mandatory adoption targeted by 2029",
+      src:{t:"BD guidelines for BIM in statutory submissions", u:"https://www.bd.gov.hk/en/resources/online-tools/building-information-modelling/index_statutory_submissions.html", c:"high"}},
     cases:[{ title:"The Henderson — openBIM for building lifecycle", stat:"−30%", statnote:"project timeline & related costs",
-      outcomes:["Facade rationalisation: −30% material waste & fabrication cost","300% increase in maintenance accuracy via FM portal + AR"], src:"bSI Award 2025 winner" }] },
-  { iso:"TW", id:"158", name:"Taiwan", region:"Asia-Pacific", lat:23.8, lon:121, proc:{l:1, note:"Public agency guidance"}, perm:{l:0} },
+      outcomes:["Facade rationalisation: −30% material waste & fabrication cost","300% increase in maintenance accuracy via FM portal + AR"],
+      src:"bSI openBIM Awards 2025 winner", url:"https://www.buildingsmart.org/the-buildingsmart-openbim-awards-2025-winners-announced/", conf:"high" }] },
+  { iso:"TW", id:"158", name:"Taiwan", region:"Asia-Pacific", lat:23.8, lon:121,
+    proc:{l:1, since:"2015", note:"PCC requires BIM-use reporting in tender awards; agency-level adoption only",
+      src:{t:"Government BIM implementation policy in Taiwan (study)", u:"https://www.sciencedirect.com/science/article/abs/pii/S2352710218304273", c:"medium"}},
+    perm:{l:0} },
   { iso:"JP", id:"392", name:"Japan", region:"Asia-Pacific", lat:36.5, lon:138.5,
-    proc:{l:2, since:"2023", note:"MLIT BIM/CIM on public works; buildings phasing"},
-    perm:{l:2, since:"2025", note:"MLIT trials IFC-based building-code checking 2025, aiming nationwide 2027"} },
+    proc:{l:3, since:"2023", note:"MLIT BIM/CIM applied in principle to all MLIT public works from FY2023",
+      src:{t:"MLIT: BIM/CIM implementation approach", u:"https://www.mlit.go.jp/tec/content/001895372.pdf", c:"high"}},
+    perm:{l:1, since:"2026", note:"Optional BIM drawing review 2025; IFC-data building confirmation from Apr 2026, native-data review targeted ~2029",
+      src:{t:"MLIT: BIM building-confirmation review briefing", u:"https://www.mlit.go.jp/jutakukentiku/build/content/001900139.pdf", c:"high"}} },
   { iso:"KR", id:"410", name:"South Korea", region:"Asia-Pacific", lat:36.5, lon:127.8,
-    proc:{l:3, since:"2016", note:"Public Procurement Service requires BIM/IFC on all public projects (minor exceptions)"}, perm:{l:0} },
+    proc:{l:3, since:"2016", note:"PPS applies BIM to its facility projects since 2016; MOLIT 2022 guidelines mandate ≥KRW 100B, phasing to all public by 2030",
+      src:{t:"BIM guide for public owners in Korea (Applied Sciences)", u:"https://doi.org/10.3390/app12073275", c:"medium"}},
+    perm:{l:1, since:"2022", note:"SEUMTER BIM e-submission and automated code checking developed, not mandated",
+      src:{t:"BIM-based e-permit adoption review (JCEM)", u:"https://journals.vilniustech.lt/index.php/JCEM/article/view/24912", c:"medium"}} },
   { iso:"KZ", id:"398", name:"Kazakhstan", region:"Asia-Pacific", lat:48, lon:68,
-    proc:{l:2, since:"2021", note:"Phased via state expertise system"}, perm:{l:2, note:"IFC submission postponed to 2026; State Bank of Information Models in development"} },
+    proc:{l:2, since:"2025", note:"TIM mandatory for state projects >KZT 5B from Jan 2025; new Construction Code expands from mid-2026",
+      src:{t:"Construction Code: digital construction ecosystem — Mondaq", u:"https://www.mondaq.com/construction-planning/1816698/construction-code-legal-alert-series-issue-3-digital-construction-ecosystem", c:"medium"}},
+    perm:{l:2, since:"2026", note:"State expertise of information models phasing in; full IFC-model submission slipped to 2026",
+      src:{t:"Kazakhstan mandates BIM design — Times of Central Asia", u:"https://timesca.com/kazakhstan-mandates-bim-design-for-all-new-buildings/", c:"medium"}} },
   { iso:"AU", id:"036", name:"Australia", region:"Asia-Pacific", lat:-25.5, lon:134,
-    proc:{l:2, note:"State-level: Transport for NSW requires IFC design files for road, rail & marine projects; no federal mandate"}, perm:{l:0} },
-  { iso:"NZ", id:"554", name:"New Zealand", region:"Asia-Pacific", lat:-41.5, lon:172.8, proc:{l:1, note:"BIM Acceleration Committee handbook"}, perm:{l:0} },
+    proc:{l:2, since:"2018", note:"No federal mandate; TfNSW Digital Engineering Framework (2018), Queensland ≥A$50M projects (2019), Victoria voluntary",
+      src:{t:"Transport for NSW Digital Engineering Framework", u:"https://www.transport.nsw.gov.au/system/files/media/documents/2022/Digital-Engineering-Framework-v4.0.pdf", c:"high"}},
+    perm:{l:0} },
+  { iso:"NZ", id:"554", name:"New Zealand", region:"Asia-Pacific", lat:-41.5, lon:172.8,
+    proc:{l:1, since:"2014", note:"MBIE procurement guidance and NZ BIM Handbook; no government client mandate",
+      src:{t:"BIM in construction procurement — NZ Government Procurement (MBIE)", u:"https://www.procurement.govt.nz/assets/procurement-property/documents/building-information-modelling-construction-procurement.pdf", c:"high"}},
+    perm:{l:0} },
   { iso:"US", id:"840", name:"United States", region:"Americas", lat:39.5, lon:-98.5,
-    proc:{l:2, since:"2007", note:"Agency-level (GSA, USACE); no national mandate"}, perm:{l:0} },
+    proc:{l:2, since:"2007", note:"Agency-level: GSA requires BIM on major projects from FY2007; USACE/VA similar; no national mandate",
+      src:{t:"GSA — National 3D-4D-BIM Program", u:"https://www.gsa.gov/real-estate/design-and-construction/3d4d-building-information-modeling", c:"high"}},
+    perm:{l:0} },
   { iso:"CA", id:"124", name:"Canada", region:"Americas", lat:56, lon:-106,
-    proc:{l:2, since:"2016", note:"Québec (SQI): BIM+IFC required >$50M CAD since 2016, >$10M CAD since Apr 2023; no federal mandate"}, perm:{l:0} },
-  { iso:"MX", id:"484", name:"Mexico", region:"Americas", lat:23.5, lon:-102, proc:{l:1, note:"MRO strategy for public works"}, perm:{l:0} },
-  { iso:"BR", id:"076", name:"Brazil", region:"Americas", lat:-10, lon:-52, proc:{l:2, since:"2021", note:"Decree 10.306: federal works phased 2021 → 2028"}, perm:{l:0} },
+    proc:{l:2, since:"2016", note:"Québec SQI: BIM+IFC on projects >$50M (2016–21), >$10M CAD from 2023; no federal mandate",
+      src:{t:"SQI — Feuille de route gouvernementale pour le BIM (Québec)", u:"https://www.sqi.gouv.qc.ca/feuille-de-route-gouvernementale-pour-le-bim", c:"high"}},
+    perm:{l:0} },
+  { iso:"MX", id:"484", name:"Mexico", region:"Americas", lat:23.5, lon:-102,
+    proc:{l:1, since:"2019", note:"SHCP 'Estrategia MIC' (2019): phased roadmap, weak enforcement; adoption largely voluntary",
+      src:{t:"BIM/MIC — Proyectos México (SHCP)", u:"https://www.proyectosmexico.gob.mx/en/building-information-modelling-bim/", c:"medium"}},
+    perm:{l:0} },
+  { iso:"BR", id:"076", name:"Brazil", region:"Americas", lat:-10, lon:-52,
+    proc:{l:2, since:"2021", note:"Decree 10.306/2020: federal works — design 2021, execution 2024, lifecycle 2028; BIM preference in procurement law 14.133/2021",
+      src:{t:"Decreto nº 10.306/2020 — Planalto (official text)", u:"http://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/D10306.htm", c:"high"}},
+    perm:{l:0} },
   { iso:"CL", id:"152", name:"Chile", region:"Americas", lat:-33.5, lon:-70.9,
-    proc:{l:2, since:"2019", note:"BIM in hospitals since 2012; IFC required as standard 2019 (Public Works, Housing, Judiciary, Air Force)"},
-    perm:{l:1, note:"IFC for permits planned then suspended; PARPro automated checks tested since 2022"} },
-  { iso:"PE", id:"604", name:"Peru", region:"Americas", lat:-9.5, lon:-75, proc:{l:2, since:"2019", note:"Plan BIM Perú: public investment by 2030"}, perm:{l:0} },
+    proc:{l:2, since:"2019", note:"Planbim Estándar BIM para Proyectos Públicos (IFC); agency tenders (hospitals, MOP) require BIM",
+      src:{t:"Estándar BIM para Proyectos Públicos — Planbim/Construye2025", u:"https://construye2025.cl/wp-content/uploads/2022/07/Estandar-BIM.pdf", c:"high"}},
+    perm:{l:1, since:"2021", note:"MINVU PARPro automated IFC rule-checking pilots; DOM en Línea e-permitting has no IFC mandate",
+      src:{t:"Chile — Global BIM Network", u:"https://globalbim.org/news/info-country/chile/", c:"medium"}} },
+  { iso:"PE", id:"604", name:"Peru", region:"Americas", lat:-9.5, lon:-75,
+    proc:{l:2, since:"2019", note:"D.S. 289-2019-EF: progressive BIM in public investment; mandatory nationwide by 2030",
+      src:{t:"Decreto Supremo N° 289-2019-EF — MEF (gob.pe)", u:"https://www.gob.pe/institucion/mef/normas-legales/293869-289-2019-ef", c:"high"}},
+    perm:{l:0} },
   { iso:"CO", id:"170", name:"Colombia", region:"Americas", lat:4.5, lon:-73,
-    proc:{l:1, note:"National strategy 2020–2026"}, perm:{l:0},
+    proc:{l:2, since:"2020", note:"Estrategia Nacional BIM 2020–2026 (DNP): phased targets toward mandatory public projects by 2026 — policy, not decree",
+      src:{t:"Estrategia Nacional BIM 2020–2026 — DNP (official PDF)", u:"https://colaboracion.dnp.gov.co/CDT/Prensa/Estrategia-Nacional-BIM-2020-2026.pdf", c:"high"}},
+    perm:{l:0},
     cases:[{ title:"Bogotá Metro Line 1 — information management", stat:"80%", statnote:"improvement in quantity accuracy",
-      outcomes:["~24 km metro, 16 stations + BRT + depot","40–80% energy-efficiency gains from BIM-supported analysis","BCF-based coordination across ACC, Aconex, BIM Track"], src:"bSI Award 2024 winner" }] },
-  { iso:"AR", id:"032", name:"Argentina", region:"Americas", lat:-35, lon:-64.5, proc:{l:1, note:"SIBIM programme"}, perm:{l:0} },
-  { iso:"UY", id:"858", name:"Uruguay", region:"Americas", lat:-32.8, lon:-56, proc:{l:1, note:"Public agency roadmap"}, perm:{l:0} },
-  { iso:"EC", id:"218", name:"Ecuador", region:"Americas", lat:-1.5, lon:-78.5, proc:{l:0}, perm:{l:0} },
+      outcomes:["~24 km metro, 16 stations + BRT + depot","40–80% energy-efficiency gains from BIM-supported analysis","BCF-based coordination across ACC, Aconex, BIM Track"],
+      src:"bSI openBIM Awards 2024 winner", url:"https://www.buildingsmart.org/the-buildingsmart-openbim-awards-2024-winners-announced/", conf:"high" }] },
+  { iso:"AR", id:"032", name:"Argentina", region:"Americas", lat:-35, lon:-64.5,
+    proc:{l:1, since:"2019", note:"SIBIM guidelines and pilots for public works; Estrategia BIM 2023–2027; no binding mandate",
+      src:{t:"Plan de implementación BIM para obra pública — Argentina.gob.ar", u:"https://www.argentina.gob.ar/noticias/plan-de-implementacion-de-metodologia-bim-para-obra-publica", c:"high"}},
+    perm:{l:0} },
+  { iso:"UY", id:"858", name:"Uruguay", region:"Americas", lat:-32.8, lon:-56,
+    proc:{l:1, since:"2019", note:"CND promotes openBIM via pilots and tender incentives; no national mandate",
+      src:{t:"CND impulsa la utilización del BIM — Corporación Nacional para el Desarrollo", u:"https://www.cnd.org.uy/noticias/cnd-impulsa-la-utilizacion-del-bim-en-uruguay", c:"high"}},
+    perm:{l:0} },
+  { iso:"EC", id:"218", name:"Ecuador", region:"Americas", lat:-1.5, lon:-78.5,
+    proc:{l:0, note:"No government BIM strategy found; industry-led BIM Forum Ecuador only",
+      src:{t:"BIM Forum Ecuador — Global BIM Network", u:"https://globalbim.org/info-collection/bim-forum-ecuador/", c:"medium"}},
+    perm:{l:0} },
 ];
 const REGIONS = ["World", "Europe", "Asia-Pacific", "Americas", "Middle East & Africa"];
 const byId = new Map(DATA.filter(d => d.id).map(d => [d.id, d]));
@@ -617,10 +794,12 @@ function renderDetail() {
   const el = document.getElementById("detail");
   if (!selected) { el.classList.remove("show"); el.innerHTML = ""; return; }
   const d = selected;
+  const srcLine = s => s ? `<div style="margin-top:3px">Source: <a class="srclink" href="${s.u}" target="_blank" rel="noopener">${s.t}</a>${s.c && s.c !== "high" ? `<span class="conf">${s.c === "medium" ? "secondary source" : "needs verification"}</span>` : ""}</div>` : "";
   const block = (label, m) => `
     <div><dt>${label}</dt>
     <dd><span class="lvlpill"><span class="sw" style="background:${lvlColor(m.l)}"></span>${LEVELS[m.l]}${m.since ? " · since " + m.since : ""}</span>
-    ${m.note ? `<div style="font-size:13px;color:var(--ink-2);margin-top:2px">${m.note}</div>` : ""}</dd></div>`;
+    ${m.note ? `<div style="font-size:13px;color:var(--ink-2);margin-top:2px">${m.note}</div>` : ""}
+    ${srcLine(m.src)}</dd></div>`;
   el.innerHTML = `
     <div class="d-head">
       <h3>${d.name}</h3><span class="srcnote">${d.region}</span>
@@ -632,7 +811,8 @@ function renderDetail() {
       ${(d.cases || []).map(c => `
         <div><dt>Documented value — ${c.src}</dt>
         <dd><strong>${c.title}</strong>
-        <ul class="outcomes">${c.outcomes.map(o => `<li>${o}</li>`).join("")}</ul></dd></div>`).join("")}
+        <ul class="outcomes">${c.outcomes.map(o => `<li>${o}</li>`).join("")}</ul>
+        ${c.url ? `<div style="margin-top:3px">Source: <a class="srclink" href="${c.url}" target="_blank" rel="noopener">${c.src}</a>${c.conf === "low" ? `<span class="conf">needs verification</span>` : ""}</div>` : ""}</dd></div>`).join("")}
     </dl>`;
   el.classList.add("show");
   el.querySelector(".d-close").addEventListener("click", () => { selected = null; renderDetail(); });
@@ -673,13 +853,13 @@ const strongest = d => Math.max(d.proc.l, d.perm.l);
 function renderTiles() {
   const cases = DATA.filter(d => d.cases);
   const nCases = cases.reduce((a, d) => a + d.cases.length, 0);
-  const inRequired = cases.filter(d => strongest(d) === 3).length;
+  const inMandate = cases.filter(d => strongest(d) >= 2).length;
   const nRequired = DATA.filter(d => strongest(d) === 3).length;
   document.getElementById("tiles").innerHTML = `
     <div class="tile"><div class="t-label">Jurisdictions tracked</div><div class="t-value">${DATA.length}</div><div class="t-note">${nRequired} where openBIM is required in some form</div></div>
     <div class="tile"><div class="t-label">Procurement mandates</div><div class="t-value">${DATA.filter(d => d.proc.l >= 2).length}</div><div class="t-note">required or phasing in, government as client</div></div>
     <div class="tile"><div class="t-label">Permit mandates</div><div class="t-value">${DATA.filter(d => d.perm.l >= 2).length}</div><div class="t-note">required or phasing in, government as regulator</div></div>
-    <div class="tile"><div class="t-label">Value cases in mandate countries</div><div class="t-value">${inRequired}&thinsp;/&thinsp;${nCases}</div><div class="t-note">documented cases sitting where openBIM is required</div></div>`;
+    <div class="tile"><div class="t-label">Value cases in mandate countries</div><div class="t-value">${inMandate}&thinsp;/&thinsp;${nCases}</div><div class="t-note">documented cases where a mandate is in force or phasing in</div></div>`;
 }
 
 function renderCorrBar() {
@@ -718,7 +898,7 @@ function renderCases() {
         <span class="lvlpill" style="margin-left:auto"><span class="sw" style="background:${lvlColor(strongest(d))};width:9px;height:9px"></span></span></div>
       <div class="c-title">${c.title}</div>
       <div class="c-stat">${c.stat}</div>
-      <div class="c-statnote">${c.statnote} · ${c.src}</div>`;
+      <div class="c-statnote">${c.statnote} · ${c.src}${c.conf === "low" ? ` <span class="conf">needs verification</span>` : ""}</div>`;
     div.addEventListener("click", () => {
       selected = d; renderDetail();
       document.getElementById("maparea").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "nearest" });

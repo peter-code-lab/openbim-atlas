@@ -34,15 +34,26 @@ panel that counts the correlation between the two.
 - Live-computed stat tiles and correlation bar; case-study cards linked to the map.
 - Full table view (also the accessibility fallback), light + dark themes.
 
-## Data status — read this
+## Data status
 
-Prototype data. Mandate statuses and case outcomes are summarised from the project
-deck ("Some openBIM business value and mandates examples"), buildingSMART Global IFC
-Mandates (2024 edition), Strategic Building Innovation studies, and public programme
-announcements — **not yet independently verified or dated to a common reference
-point**. Countries without colour have no programme *tracked yet*; absence of colour
-is absence of research, not proof of absence. Before external use, each claim needs a
-source link and an as-of date.
+Every jurisdiction was individually researched (July 2026) and **every claim carries
+its own source link** in the country card — official decrees, programme sites and
+legislation where available (e.g. Italy D.M. 560/2017, Russia PP 331, Brazil Decreto
+10.306/2020, Peru D.S. 289-2019-EF, Vietnam Decision 258/QĐ-TTg, Hong Kong DEVB TC(W)
+18/2018, Singapore BCA CORENET-X circular, Denmark ICT Regulations via bygst.dk).
+Where only secondary reporting was found, the card shows a *secondary source* badge;
+two case figures (Finland's $6M estimate, Singapore's JTC percentages) are flagged
+*needs verification* pending a primary document. Value cases link to the
+buildingSMART openBIM Awards announcements/yearbooks (plus one Norconsult/Autodesk
+case study for Norway's E39). Uncoloured countries had no programme found in this
+research pass — absence of colour is absence of evidence, not proof of absence.
+
+Research corrections worth knowing about (vs. common secondary summaries): several
+"mandates" are agency-level rather than statutory (Norway Statsbygg, Finland Senate,
+Netherlands RWS/RVB, US GSA), so they are classed *partial*; Spain's binding mandate
+began April 2024 (Plan BIM); Denmark's current ICT regulations date to 2013; Finland's
+IFC permit mandate is in force since 1 January 2026; Czechia's BIM Act bites January
+2027; Russia's state-funded mandate (2022) is statutory and classed *required*.
 
 ## Structure
 
