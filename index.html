@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<title>openBIM Atlas — mockup v0.1</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page:        #f9f9f7;
+    --surface:     #fcfcfb;
+    --ink:         #0b0b0b;
+    --ink-2:       #52514e;
+    --ink-muted:   #898781;
+    --grid:        #e1e0d9;
+    --baseline:    #c3c2b7;
+    --border:      rgba(11,11,11,0.10);
+    --dot:         #dddcd4;          /* basemap land dots */
+    --stage0:      #b5b3ab;          /* no mandate — neutral */
+    --stage1:      #86b6ef;          /* guidelines / strategy */
+    --stage2:      #2a78d6;          /* mandate phasing in   */
+    --stage3:      #104281;          /* mandate in force     */
+    --seq-lo:      #cde2fb;          /* sequential ramp ends */
+    --seq-hi:      #0d366b;
+    --accent:      #2a78d6;
+    --ring:        #fcfcfb;          /* 2px surface ring around marks */
+    --warn-bg:     #faf6ec;
+    --warn-ink:    #6b5a1e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --page:      #0d0d0d;
+      --surface:   #1a1a19;
+      --ink:       #ffffff;
+      --ink-2:     #c3c2b7;
+      --ink-muted: #898781;
+      --grid:      #2c2c2a;
+      --baseline:  #383835;
+      --border:    rgba(255,255,255,0.10);
+      --dot:       #33332f;
+      --stage0:    #5a5954;
+      --stage1:    #184f95;
+      --stage2:    #3987e5;
+      --stage3:    #9ec5f4;
+      --seq-lo:    #0d366b;
+      --seq-hi:    #cde2fb;
+      --accent:    #3987e5;
+      --ring:      #1a1a19;
+      --warn-bg:   #26231a;
+      --warn-ink:  #d8c88e;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page:      #0d0d0d;
+    --surface:   #1a1a19;
+    --ink:       #ffffff;
+    --ink-2:     #c3c2b7;
+    --ink-muted: #898781;
+    --grid:      #2c2c2a;
+    --baseline:  #383835;
+    --border:    rgba(255,255,255,0.10);
+    --dot:       #33332f;
+    --stage0:    #5a5954;
+    --stage1:    #184f95;
+    --stage2:    #3987e5;
+    --stage3:    #9ec5f4;
+    --seq-lo:    #0d366b;
+    --seq-hi:    #cde2fb;
+    --accent:    #3987e5;
+    --ring:      #1a1a19;
+    --warn-bg:   #26231a;
+    --warn-ink:  #d8c88e;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 64px; }
+
+  header.site { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px; margin-bottom: 6px; }
+  .brand { font-size: 21px; font-weight: 700; letter-spacing: -0.01em; }
+  .brand .thin { font-weight: 400; color: var(--ink-2); }
+  .version { font-size: 12px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  p.lede { margin: 4px 0 18px; color: var(--ink-2); max-width: 68ch; }
+  p.lede strong { color: var(--ink); font-weight: 600; }
+
+  .databanner {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--warn-bg); color: var(--warn-ink);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 5px 10px; font-size: 12.5px; margin-bottom: 20px;
+  }
+  .databanner svg { flex: none; }
+
+  .controls {
+    display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center;
+    margin-bottom: 14px;
+  }
+  .ctl-group { display: flex; align-items: center; gap: 8px; }
+  .ctl-label { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-muted); }
+  .seg { display: flex; border: 1px solid var(--border); border-radius: 7px; overflow: hidden; background: var(--surface); }
+  .seg button {
+    appearance: none; border: 0; background: transparent; color: var(--ink-2);
+    font: inherit; font-size: 13.5px; padding: 6px 13px; cursor: pointer;
+  }
+  .seg button + button { border-left: 1px solid var(--border); }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: #fff; font-weight: 600; }
+  :root[data-theme="dark"] .seg button[aria-pressed="true"] { color: #0d0d0d; }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .seg button[aria-pressed="true"] { color: #0d0d0d; }
+  }
+  .seg button:focus-visible, .chip:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 1px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    appearance: none; font: inherit; font-size: 13px; cursor: pointer;
+    border: 1px solid var(--border); border-radius: 999px;
+    background: var(--surface); color: var(--ink-2); padding: 4px 12px;
+  }
+  .chip[aria-pressed="true"] { border-color: var(--accent); color: var(--ink); font-weight: 600; box-shadow: inset 0 0 0 1px var(--accent); }
+
+  .panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px; margin-bottom: 18px;
+  }
+  .maparea { position: relative; }
+  .maparea canvas, .maparea svg.overlay { display: block; width: 100%; height: auto; }
+  .maparea svg.overlay { position: absolute; inset: 0; }
+  .maplegend {
+    position: absolute; left: 10px; bottom: 8px;
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 12px; font-size: 12.5px; color: var(--ink-2);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .maplegend .row { display: flex; align-items: center; gap: 7px; }
+  .maplegend .sw { width: 11px; height: 11px; border-radius: 50%; flex: none; box-shadow: 0 0 0 2px var(--ring); }
+  .maplegend .gradbar { width: 110px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--seq-lo), var(--seq-hi)); }
+  .maplegend .sizecue { display: flex; align-items: center; gap: 5px; color: var(--ink-muted); }
+
+  .tooltip {
+    position: absolute; pointer-events: none; z-index: 5;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.14);
+    padding: 9px 12px; font-size: 13px; max-width: 260px;
+    opacity: 0; transition: opacity 90ms linear;
+  }
+  @media (prefers-reduced-motion: reduce) { .tooltip { transition: none; } }
+  .tooltip.show { opacity: 1; }
+  .tooltip .t-name { font-weight: 700; }
+  .tooltip .t-stage { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+  .tooltip .t-stage .sw { width: 9px; height: 9px; border-radius: 50%; }
+  .tooltip .t-meta { color: var(--ink-2); margin-top: 2px; }
+  .tooltip .t-metric { color: var(--ink-muted); font-size: 12px; margin-top: 3px; }
+
+  .detail {
+    display: none; border-top: 1px solid var(--grid); margin-top: 14px; padding-top: 12px;
+  }
+  .detail.show { display: block; }
+  .detail .d-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .detail h3 { margin: 0; font-size: 17px; }
+  .detail .d-close { margin-left: auto; appearance: none; border: 0; background: none; color: var(--ink-muted); font: inherit; cursor: pointer; }
+  .detail .d-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px 22px; margin-top: 8px; }
+  .detail dt { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); margin: 0; }
+  .detail dd { margin: 1px 0 0; font-size: 14px; }
+  .stagepill { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+  .stagepill .sw { width: 10px; height: 10px; border-radius: 50%; box-shadow: 0 0 0 2px var(--ring); }
+
+  h2.sect { font-size: 16px; margin: 26px 0 4px; }
+  p.sect-sub { margin: 0 0 12px; color: var(--ink-2); font-size: 13.5px; max-width: 72ch; }
+
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 14px; }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+  .tile .t-label { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); }
+  .tile .t-value { font-size: 28px; font-weight: 700; letter-spacing: -0.01em; margin-top: 2px; }
+  .tile .t-note { font-size: 12.5px; color: var(--ink-2); margin-top: 1px; }
+
+  .stripwrap { overflow-x: auto; }
+
+  details.tableview { margin-top: 20px; }
+  details.tableview summary { cursor: pointer; color: var(--ink-2); font-size: 14px; }
+  .tblwrap { overflow-x: auto; margin-top: 10px; }
+  table.data { border-collapse: collapse; width: 100%; font-size: 13px; }
+  table.data th, table.data td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+  table.data th { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-muted); font-weight: 600; }
+  table.data td.num { font-variant-numeric: tabular-nums; text-align: right; }
+  table.data td .sw { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: baseline; }
+
+  footer.site { margin-top: 34px; padding-top: 14px; border-top: 1px solid var(--grid); color: var(--ink-muted); font-size: 12.5px; max-width: 78ch; }
+  footer.site a { color: var(--ink-2); }
+</style>
+
+<div class="wrap">
+  <header class="site">
+    <span class="brand">openBIM <span class="thin">Atlas</span></span>
+    <span class="version">Working mockup · v0.1</span>
+  </header>
+  <p class="lede">
+    One map, two layers — <strong>where openBIM is mandated</strong> and <strong>how mature adoption
+    actually is</strong> — plus the view nobody else offers: the two layers <strong>correlated</strong>.
+    Trackers list mandates jurisdiction by jurisdiction; this integrates policy and practice
+    so the story is the relationship, not the list.
+  </p>
+  <p class="databanner">
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1.5 15 14H1L8 1.5zm0 4a.9.9 0 0 0-.9 1l.3 3a.6.6 0 0 0 1.2 0l.3-3a.9.9 0 0 0-.9-1zM8 12.8a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/></svg>
+    Prototype data — mandate statuses summarised from public sources, maturity scores are illustrative placeholders. Verify before publishing.
+  </p>
+
+  <div class="controls">
+    <div class="ctl-group">
+      <span class="ctl-label">Layer</span>
+      <div class="seg" role="group" aria-label="Map layer" id="viewSeg">
+        <button data-view="integrated" aria-pressed="true">Integrated</button>
+        <button data-view="mandates" aria-pressed="false">Mandates</button>
+        <button data-view="metrics" aria-pressed="false">Maturity</button>
+      </div>
+    </div>
+    <div class="ctl-group">
+      <span class="ctl-label">Region</span>
+      <div class="chips" role="group" aria-label="Region filter" id="regionChips"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="maparea" id="maparea">
+      <canvas id="basemap" aria-hidden="true"></canvas>
+      <svg class="overlay" id="markers" role="group" aria-label="Jurisdiction markers"></svg>
+      <div class="maplegend" id="maplegend"></div>
+      <div class="tooltip" id="tooltip" role="status"></div>
+    </div>
+    <div class="detail" id="detail"></div>
+  </div>
+
+  <h2 class="sect">Does policy move practice?</h2>
+  <p class="sect-sub">
+    Every jurisdiction, placed by its openBIM maturity score and grouped by mandate stage.
+    The vertical tick marks each group's average — the gap between the top and bottom rows is
+    the correlation headline.
+  </p>
+  <div class="tiles" id="tiles"></div>
+  <div class="panel stripwrap">
+    <svg id="strip" role="img" aria-label="Strip plot of openBIM maturity by mandate stage"></svg>
+  </div>
+
+  <details class="tableview">
+    <summary>Table view — all jurisdictions</summary>
+    <div class="tblwrap"><table class="data" id="datatable"></table></div>
+  </details>
+
+  <footer class="site">
+    Mockup for the openBIM data project. Mandate stages compiled from public programme announcements
+    (buildingSMART chapters, national BIM programmes, EU public-procurement rules); maturity scores are
+    placeholder composites pending a defined methodology. Nothing here is publication-ready data.
+  </footer>
+</div>
+
+<script>
+/* ================= Geometry: coarse continent outlines (lon,lat) =================
+   Deliberately low-fidelity — rendered as a dot matrix, the stylisation is the point.
+   Positive = E / N. Antarctica omitted. */
+const LAND = [
+  // North & Central America
+  [[-168,66],[-164,60],[-157,58],[-151,60],[-146,60],[-140,59],[-133,56],[-128,52],
+   [-125,49],[-124,43],[-120,34],[-117,32],[-114,30],[-110,24],[-106,20],[-103,18],
+   [-96,15.5],[-92,14.5],[-88,13],[-85,11],[-80,8.5],[-78,8],[-80,9.5],[-83,11],
+   [-83.5,15.5],[-88,16.5],[-87,21.5],[-90,21.5],[-91,18.5],[-95,18.5],[-97,22],
+   [-97,26],[-94,29.5],[-90,29],[-84,30],[-83,28],[-81,25],[-80,25.2],[-80,27],
+   [-81,31],[-79,33],[-76,35],[-75,38],[-74,40.5],[-70,41.5],[-70,43.5],[-66,44.5],
+   [-64,45.5],[-60,46],[-64,49],[-59,52],[-61,55],[-64,58.5],[-67,60],[-70,61],
+   [-78,62.5],[-81,66],[-85,68],[-95,68.5],[-105,68.5],[-115,69],[-125,70],
+   [-133,69.5],[-141,69.5],[-152,71],[-160,70.5],[-166,68.5]],
+  // Greenland
+  [[-45,59.8],[-49,61.5],[-53,64],[-54,67],[-53,70],[-56,73],[-61,76],[-62,77],
+   [-55,80],[-45,82.5],[-33,83.3],[-25,82],[-20,80],[-17,76],[-21,73],[-25,71],
+   [-22,70],[-26,68.5],[-33,67.5],[-38,65],[-41,62]],
+  // South America
+  [[-77,8],[-75,10.5],[-72,12],[-68,11.5],[-64,10.6],[-60,8.6],[-56,6],[-52,4.5],
+   [-50,0],[-48,-1],[-44,-2.7],[-39,-3.5],[-35,-5.5],[-34.8,-8],[-37,-11],[-39,-15],
+   [-39,-18],[-41,-22],[-45,-23.5],[-48,-26],[-51,-30],[-53,-34],[-57,-34.5],
+   [-58,-36.5],[-62,-39],[-64,-41],[-65,-45],[-67,-47],[-68,-50],[-69,-52],
+   [-68,-54.5],[-71,-54],[-72,-52],[-73,-49],[-73.5,-45],[-73,-41],[-71.5,-37],
+   [-71,-33],[-70.5,-29],[-70,-24],[-70.5,-20],[-72,-17],[-76,-14],[-78,-10],
+   [-81,-6],[-81,-4.5],[-80,-2],[-80.5,0.5],[-78,2],[-77.5,5]],
+  // Africa
+  [[-6,35.5],[-2,35.5],[3,36.8],[10,37.2],[11,33.5],[15,32.5],[20,32.7],[25,32],
+   [30,31.3],[32.5,31.2],[34,28],[36,24],[37,21],[38.5,18],[40,15],[43,11.5],
+   [47,11.2],[51,11.8],[51,10.3],[47.5,7],[44,4],[41,0],[40,-3],[39,-7],[40.5,-11],
+   [40,-15],[35,-18],[35.5,-22],[33,-26],[31,-29.5],[27,-33.5],[22,-34.5],[19,-34.7],
+   [17.5,-33],[15,-29],[14.5,-24],[12,-18],[13,-12],[12,-6],[9,-2],[9,3],[6,4.3],
+   [3,6.3],[-2,5],[-5,5],[-8,4.4],[-13,9],[-16,12.5],[-17.5,14.7],[-16.5,18],
+   [-15,21],[-13,25],[-10,29],[-9,32]],
+  // Madagascar
+  [[43.5,-25.5],[43,-21],[44,-16],[48,-12.5],[50,-15],[49.5,-19],[47,-25]],
+  // Eurasia
+  [[-9,38.7],[-9,43],[-4,43.5],[-1.5,43.6],[-1,46],[-2.5,47.5],[-4.5,48.4],
+   [-1.5,49.5],[1.5,51],[4,52],[6,53.5],[8,54],[8,56.5],[10,57.5],[7,58],[5,59],
+   [5,62],[10,64],[12,66],[15,68.5],[20,69.8],[25,71],[28,70.5],[31,69.8],
+   [33,68.5],[40,67.5],[44,66.5],[46,68],[54,68.8],[60,69],[68,69.5],[75,72],
+   [80,73],[86,75],[95,76.5],[105,77.5],[113,76.5],[120,73.5],[128,72.5],
+   [140,72.5],[150,70.5],[160,69.5],[170,68],[178,66.5],[179.5,65.5],[177,64],
+   [174,61.5],[170,60],[166,59],[163,56.5],[160.5,52.8],[158,51.5],[156,51],
+   [155.5,56],[152,59],[147,59.5],[142,59],[140,53.5],[138,51],[135,48],
+   [132,43.5],[130,42.5],[129.5,40],[129,36.5],[127.5,34.5],[126,35],[126.5,37.5],
+   [125.5,39.5],[122,39.8],[121.5,38.5],[118,38.5],[119,37],[122,37],[120.5,34.5],
+   [121.5,32],[122,30.5],[120,27.5],[117,23.5],[113.5,22],[110,20.5],[108,18.5],
+   [108,16],[109,13],[106.5,9],[104.5,8.6],[105,10.5],[103.5,11.5],[100.5,13.5],
+   [100,9],[103,1.8],[101.5,2.5],[100,6],[98.5,10],[97.5,16],[94,17.5],[91.5,22.5],
+   [89,21.8],[86.5,21],[84,18.5],[80.5,15.5],[80,11],[79.8,8.5],[77.5,8],
+   [74.5,13],[72.5,19],[70,21],[66.5,24.5],[61.5,25],[57,25.8],[56.5,27],[54,26.5],
+   [51,27.5],[48.5,29.5],[47.5,29],[50,26.5],[50.5,24.8],[51.5,24],[54,24.2],
+   [56.3,26.8],[58.5,23.5],[59.5,22.5],[57.5,19.5],[55,17],[52,16],[48,14],
+   [45,12.8],[43.5,12.7],[42.5,15],[40.5,18],[38.8,21.5],[36,26],[34.5,28],
+   [32.5,29.9],[34,31.2],[35,31.5],[35.9,34.5],[36,36.5],[33,36.8],[30,36.3],
+   [27.5,37],[26.5,38.5],[26,40],[23.8,40.5],[23,39],[24,37.5],[22.3,36.5],
+   [21.5,38.3],[20,39.5],[19.5,41.5],[18.5,42.5],[16,43.5],[14,45],[13.5,45.6],
+   [12.5,44.5],[14,42],[16,41.9],[18.5,40.3],[16.8,40.2],[17,38.9],[15.8,38],
+   [15,40],[13,41.2],[11.5,42.5],[10,44],[8.8,44.3],[7,43.6],[5,43.2],[3.2,42.4],
+   [1,41],[0,39.5],[-0.5,38],[-2,36.8],[-4.5,36.3],[-5.6,36],[-7,37],[-9,37]],
+  // Sri Lanka
+  [[79.8,9.5],[81.5,8.8],[81.8,7],[80.5,5.9],[79.7,7.5]],
+  // Sumatra
+  [[95.3,5.6],[97.5,4],[100,2],[102,0],[104,-2],[106,-5],[105.8,-5.9],[103.5,-5],
+   [101,-2.5],[98.5,0.5],[96.5,3],[95,5]],
+  // Java
+  [[105.2,-6.8],[108,-6.8],[111,-6.9],[114,-7.6],[115.5,-8.4],[113,-8.5],
+   [109.5,-7.8],[106.5,-7.5],[105,-7]],
+  // Borneo
+  [[109.5,0.5],[110.5,3],[113,4.5],[115.5,6],[117.5,7],[119,5.5],[118.5,3],
+   [117.5,0.5],[116,-2.5],[114,-3.5],[111.5,-3],[110,-1.5],[109,-0.5]],
+  // Sulawesi
+  [[119.5,-0.5],[120.5,0.8],[122,0.5],[121.5,-1.5],[122.5,-3],[121.5,-4.5],
+   [120.5,-5.5],[119.5,-4],[119.8,-2]],
+  // New Guinea
+  [[131,-0.8],[134,-1],[137,-1.8],[140,-2.5],[143,-3.8],[146,-5.5],[148,-8],
+   [150.5,-10.2],[147.5,-10],[144,-8],[141,-8.5],[138,-7.5],[135,-4.5],[132.5,-3],
+   [131,-1.5]],
+  // Philippines: Luzon, Mindanao
+  [[120,18.5],[122,18],[122,16],[121.5,14],[120.5,13.8],[120,16]],
+  [[122,8],[124,9],[126,9.5],[126.5,7.5],[125.5,6],[123.5,6.5],[122,7]],
+  // Japan
+  [[129.8,31.5],[130.8,30.8],[132,32.5],[134.5,33.5],[137,34.3],[139.5,34.8],
+   [140.8,35.5],[141.5,38.5],[141.3,41],[142,42],[144,42.8],[145.8,44.2],
+   [144.5,45.4],[141.8,45.4],[140.3,43],[139.8,40.5],[138.5,37.8],[136,36.5],
+   [133,35.3],[130.8,33.8],[129.5,32.5]],
+  // Taiwan
+  [[120,25.2],[121.8,25],[121,22.5],[120.2,23.5]],
+  // Great Britain
+  [[-5.5,50],[-3,50.5],[0.5,50.8],[1.6,51.3],[1.5,52.8],[0,53.5],[-1.5,54.8],
+   [-2,55.8],[-2.2,57.5],[-3.5,58.5],[-5,58.5],[-5.5,57],[-6,55.5],[-4.5,54.5],
+   [-4.5,53.3],[-5.3,51.8],[-4,51.3]],
+  // Ireland
+  [[-10,51.7],[-8,51.5],[-6.2,52.2],[-6,53.5],[-6.3,54.5],[-8,55.2],[-10,54.2],
+   [-10,52.8]],
+  // Iceland
+  [[-24.5,63.9],[-21,63.5],[-16,63.6],[-13.8,64.5],[-15,66],[-19,66.4],[-23,66.2],
+   [-24.5,65]],
+  // Australia
+  [[113.5,-22],[113.8,-26.5],[115,-31],[115.5,-34.2],[119,-35],[124,-33],
+   [129,-31.8],[132,-32.2],[134,-33],[135.5,-34.8],[138,-35.5],[139.5,-37.2],
+   [143,-38.8],[146.5,-39],[149.5,-37.5],[151.5,-34],[153,-31],[153.5,-27.5],
+   [152.5,-25],[150.5,-22.5],[148.5,-20],[146.5,-19],[145.5,-16.5],[143.5,-14],
+   [142.5,-10.8],[141.5,-13],[140.5,-17.5],[137.5,-16],[135.5,-12],[132.5,-11.5],
+   [130,-12.8],[129,-14.8],[127,-14],[125,-14.3],[123,-16.3],[122,-18],[119,-20],
+   [116,-20.8],[114,-21.8]],
+  // Tasmania
+  [[145,-40.8],[148,-40.9],[148.3,-42.2],[146.8,-43.5],[145.2,-42.5]],
+  // New Zealand
+  [[172.7,-34.4],[175.5,-36.5],[178.4,-37.7],[177.5,-39.5],[174.8,-41.4],
+   [173.2,-39],[174.5,-37.5]],
+  [[172.7,-40.7],[174.3,-41.3],[173,-42.8],[171.2,-44.3],[168.5,-46.6],
+   [166.5,-46],[168,-44],[170.5,-42.3],[171.8,-41.3]],
+  // Cuba, Hispaniola, Newfoundland
+  [[-84.8,22.7],[-81,23.1],[-77.5,21.5],[-74.2,20.2],[-75.5,19.9],[-79,21.5],
+   [-83,22],[-84.9,21.9]],
+  [[-73.5,19.9],[-70,19.8],[-68.5,18.5],[-71.5,18],[-74.4,18.3],[-73,18.9]],
+  [[-59.5,47.6],[-55.5,47],[-52.8,47.5],[-53.5,49],[-56,50],[-58,49.5],[-59.5,48.5]],
+];
+/* Inland seas carved out of the outlines above */
+const SEAS = [
+  // Baltic
+  [[13,54.3],[19,54.3],[21,55.5],[21,57],[24,58],[28,59.3],[30,59.8],[26,60.3],
+   [23,60.3],[21.5,62],[21,64],[22,65.8],[19.5,64.5],[18,62.5],[17,60.5],[16,58],
+   [14,55.5]],
+  // Black Sea
+  [[28,41.3],[32,41.7],[36,41.5],[40,41.3],[41.5,42.5],[40,44],[38,45],[36.5,45.3],
+   [33.5,44.5],[33,45.5],[31,46.3],[29,45.5],[28,43.5]],
+  // Caspian
+  [[49,37],[53,37],[54,39],[53.5,42],[52.5,45],[50,46.5],[48,45.5],[47.5,43],
+   [49,41],[49.5,39]],
+  // Hudson Bay
+  [[-94,57],[-90,56.5],[-85,55.5],[-80,55],[-77,56],[-76.5,58.5],[-78,61],
+   [-82,63],[-88,63.5],[-92,62],[-94,60],[-95,58]],
+  // Great Lakes (as one blob chain)
+  [[-92,47],[-88,48],[-84,46],[-79,43.5],[-76,43.5],[-78,42.5],[-83,41.5],
+   [-87,41.7],[-90,44]],
+];
+
+/* ================= Data =================
+   stage: 3 in force · 2 phasing in / announced · 1 strategy or guidelines · 0 none tracked
+   maturity: 0–100 ILLUSTRATIVE composite (standards adoption, chapter activity, market use). */
+const STAGES = [
+  { key: 0, label: "No mandate tracked" },
+  { key: 1, label: "Strategy / guidelines" },
+  { key: 2, label: "Mandate phasing in" },
+  { key: 3, label: "Mandate in force" },
+];
+const DATA = [
+  { iso:"GB", name:"United Kingdom", region:"Europe", lat:53.8, lon:-2.2, stage:3, since:"2016", scope:"Centrally procured public projects (BIM Level 2 → ISO 19650)", maturity:88, bsi:true,  iso19650:"Adopted" },
+  { iso:"IE", name:"Ireland",        region:"Europe", lat:53.2, lon:-8,   stage:2, since:"2024", scope:"Public works, phased by project size",                        maturity:70, bsi:true,  iso19650:"Adopted" },
+  { iso:"NO", name:"Norway",         region:"Europe", lat:61,   lon:9,    stage:3, since:"2010", scope:"Statsbygg public buildings, IFC required",                    maturity:92, bsi:true,  iso19650:"Adopted" },
+  { iso:"SE", name:"Sweden",         region:"Europe", lat:62,   lon:15,   stage:2, since:"2015", scope:"Trafikverket infrastructure projects",                        maturity:84, bsi:true,  iso19650:"Adopted" },
+  { iso:"FI", name:"Finland",        region:"Europe", lat:62.5, lon:26,   stage:3, since:"2007", scope:"Senate Properties public buildings, IFC required",            maturity:91, bsi:true,  iso19650:"Adopted" },
+  { iso:"DK", name:"Denmark",        region:"Europe", lat:56,   lon:9.5,  stage:3, since:"2007", scope:"State clients; extended to regions & municipalities 2011",    maturity:89, bsi:true,  iso19650:"Adopted" },
+  { iso:"NL", name:"Netherlands",    region:"Europe", lat:52.2, lon:5.5,  stage:3, since:"2012", scope:"Rijkswaterstaat & central government estate",                  maturity:85, bsi:true,  iso19650:"Adopted" },
+  { iso:"BE", name:"Belgium",        region:"Europe", lat:50.6, lon:4.5,  stage:1, since:"—",    scope:"Sector protocols, no public mandate",                          maturity:68, bsi:true,  iso19650:"Adopted" },
+  { iso:"LU", name:"Luxembourg",     region:"Europe", lat:49.7, lon:6.1,  stage:1, since:"—",    scope:"National guidelines",                                          maturity:66, bsi:false, iso19650:"Adopted" },
+  { iso:"DE", name:"Germany",        region:"Europe", lat:51,   lon:10,   stage:3, since:"2020", scope:"Federal infrastructure; federal buildings phasing",            maturity:80, bsi:true,  iso19650:"Adopted" },
+  { iso:"FR", name:"France",         region:"Europe", lat:46.5, lon:2.5,  stage:1, since:"—",    scope:"Plan BIM 2022 — incentives, no mandate",                       maturity:76, bsi:true,  iso19650:"Adopted" },
+  { iso:"ES", name:"Spain",          region:"Europe", lat:40.2, lon:-3.7, stage:3, since:"2018", scope:"Public tenders; 2024 plan widens scope in phases",             maturity:74, bsi:true,  iso19650:"Adopted" },
+  { iso:"PT", name:"Portugal",       region:"Europe", lat:39.5, lon:-8,   stage:1, since:"—",    scope:"Voluntary, technical committee guidance",                      maturity:60, bsi:false, iso19650:"Adopted" },
+  { iso:"IT", name:"Italy",          region:"Europe", lat:42.8, lon:12.5, stage:3, since:"2019", scope:"D.M. 560/2017 phased; all public works from 2025",             maturity:78, bsi:true,  iso19650:"Adopted" },
+  { iso:"CH", name:"Switzerland",    region:"Europe", lat:46.8, lon:8.2,  stage:1, since:"—",    scope:"KBOB / SBB client guidance",                                   maturity:75, bsi:true,  iso19650:"Adopted" },
+  { iso:"AT", name:"Austria",        region:"Europe", lat:47.5, lon:14.5, stage:1, since:"—",    scope:"ÖNORM standards, voluntary",                                   maturity:72, bsi:true,  iso19650:"Adopted" },
+  { iso:"CZ", name:"Czechia",        region:"Europe", lat:49.8, lon:15.5, stage:2, since:"2023", scope:"Above-threshold public contracts, timeline shifting",          maturity:62, bsi:true,  iso19650:"Adopted" },
+  { iso:"PL", name:"Poland",         region:"Europe", lat:52,   lon:19,   stage:1, since:"—",    scope:"Roadmap published, mandate deferred",                          maturity:58, bsi:true,  iso19650:"Adopted" },
+  { iso:"EE", name:"Estonia",        region:"Europe", lat:58.7, lon:25.5, stage:2, since:"2025", scope:"e-construction platform, phased requirements",                 maturity:71, bsi:true,  iso19650:"Adopted" },
+  { iso:"LT", name:"Lithuania",      region:"Europe", lat:55.3, lon:24,   stage:2, since:"2025", scope:"Public procurement, phased",                                   maturity:63, bsi:false, iso19650:"Adopted" },
+  { iso:"GR", name:"Greece",         region:"Europe", lat:39,   lon:22,   stage:1, since:"—",    scope:"Digital strategy, pilots",                                     maturity:45, bsi:false, iso19650:"Partial" },
+  { iso:"TR", name:"Türkiye",        region:"Europe", lat:39,   lon:35,   stage:1, since:"—",    scope:"Agency-level guidance, mega-project practice",                 maturity:48, bsi:true,  iso19650:"Partial" },
+  { iso:"UA", name:"Ukraine",        region:"Europe", lat:49,   lon:31,   stage:1, since:"2021", scope:"National BIM concept adopted",                                 maturity:50, bsi:false, iso19650:"Partial" },
+  { iso:"RU", name:"Russia",         region:"Europe", lat:56,   lon:44,   stage:2, since:"2022", scope:"State-funded projects, scope revised since",                   maturity:55, bsi:false, iso19650:"Partial" },
+  { iso:"AE", name:"United Arab Emirates", region:"Middle East & Africa", lat:24, lon:54.3, stage:3, since:"2013", scope:"Dubai Municipality mandate for larger buildings", maturity:77, bsi:true, iso19650:"Adopted" },
+  { iso:"SA", name:"Saudi Arabia",   region:"Middle East & Africa", lat:24,   lon:45,   stage:1, since:"—", scope:"Contractual on giga-projects, no public mandate",    maturity:65, bsi:false, iso19650:"Partial" },
+  { iso:"QA", name:"Qatar",          region:"Middle East & Africa", lat:25.3, lon:51.2, stage:1, since:"—", scope:"Client-level requirements (Ashghal)",                maturity:58, bsi:false, iso19650:"Partial" },
+  { iso:"IL", name:"Israel",         region:"Middle East & Africa", lat:31.5, lon:35,   stage:1, since:"—", scope:"Government pilots and guidance",                     maturity:60, bsi:false, iso19650:"Partial" },
+  { iso:"ZA", name:"South Africa",   region:"Middle East & Africa", lat:-29,  lon:24.5, stage:1, since:"—", scope:"Industry protocols, voluntary",                      maturity:55, bsi:false, iso19650:"Partial" },
+  { iso:"EG", name:"Egypt",          region:"Middle East & Africa", lat:26.5, lon:29.5, stage:0, since:"—", scope:"No national programme tracked",                      maturity:38, bsi:false, iso19650:"—" },
+  { iso:"MA", name:"Morocco",        region:"Middle East & Africa", lat:31.8, lon:-6.5, stage:0, since:"—", scope:"No national programme tracked",                      maturity:33, bsi:false, iso19650:"—" },
+  { iso:"NG", name:"Nigeria",        region:"Middle East & Africa", lat:9.5,  lon:8,    stage:0, since:"—", scope:"No national programme tracked",                      maturity:30, bsi:false, iso19650:"—" },
+  { iso:"KE", name:"Kenya",          region:"Middle East & Africa", lat:0.5,  lon:37.8, stage:0, since:"—", scope:"No national programme tracked",                      maturity:30, bsi:false, iso19650:"—" },
+  { iso:"GH", name:"Ghana",          region:"Middle East & Africa", lat:7.9,  lon:-1.2, stage:0, since:"—", scope:"No national programme tracked",                      maturity:28, bsi:false, iso19650:"—" },
+  { iso:"ET", name:"Ethiopia",       region:"Middle East & Africa", lat:9,    lon:39.5, stage:0, since:"—", scope:"No national programme tracked",                      maturity:25, bsi:false, iso19650:"—" },
+  { iso:"SG", name:"Singapore",      region:"Asia-Pacific", lat:1.35, lon:103.8, stage:3, since:"2015", scope:"BIM e-submission for building plans > 5,000 m²",        maturity:90, bsi:true,  iso19650:"Adopted" },
+  { iso:"MY", name:"Malaysia",       region:"Asia-Pacific", lat:3.8,  lon:102,   stage:2, since:"2019", scope:"JKR mandate on larger public projects",                 maturity:64, bsi:true,  iso19650:"Partial" },
+  { iso:"TH", name:"Thailand",       region:"Asia-Pacific", lat:15.5, lon:101,   stage:1, since:"—",    scope:"Industry guidelines",                                   maturity:50, bsi:false, iso19650:"Partial" },
+  { iso:"VN", name:"Vietnam",        region:"Asia-Pacific", lat:16.5, lon:106.3, stage:2, since:"2023", scope:"Phased mandate on public investment projects",          maturity:55, bsi:false, iso19650:"Partial" },
+  { iso:"ID", name:"Indonesia",      region:"Asia-Pacific", lat:-2.5, lon:113.5, stage:1, since:"—",    scope:"Regulation for government buildings, partial",          maturity:52, bsi:false, iso19650:"Partial" },
+  { iso:"PH", name:"Philippines",    region:"Asia-Pacific", lat:13,   lon:122,   stage:1, since:"—",    scope:"Agency pilots",                                         maturity:42, bsi:false, iso19650:"—" },
+  { iso:"IN", name:"India",          region:"Asia-Pacific", lat:22,   lon:79,    stage:1, since:"—",    scope:"Guidelines; required on metro & major transport",       maturity:56, bsi:false, iso19650:"Partial" },
+  { iso:"CN", name:"China",          region:"Asia-Pacific", lat:35,   lon:104,   stage:1, since:"—",    scope:"National guidelines, provincial mandates vary",         maturity:70, bsi:true,  iso19650:"Partial" },
+  { iso:"HK", name:"Hong Kong SAR",  region:"Asia-Pacific", lat:22.3, lon:114.2, stage:3, since:"2018", scope:"Government capital works over HK$30M",                  maturity:81, bsi:true,  iso19650:"Adopted" },
+  { iso:"TW", name:"Taiwan",         region:"Asia-Pacific", lat:23.8, lon:121,   stage:1, since:"—",    scope:"Public agency guidance",                                maturity:62, bsi:false, iso19650:"Partial" },
+  { iso:"JP", name:"Japan",          region:"Asia-Pacific", lat:36.5, lon:138.5, stage:2, since:"2023", scope:"MLIT BIM/CIM on public works; buildings phasing",       maturity:79, bsi:true,  iso19650:"Adopted" },
+  { iso:"KR", name:"South Korea",    region:"Asia-Pacific", lat:36.5, lon:127.8, stage:3, since:"2016", scope:"Public procurement service, large projects",            maturity:83, bsi:true,  iso19650:"Adopted" },
+  { iso:"KZ", name:"Kazakhstan",     region:"Asia-Pacific", lat:48,   lon:68,    stage:2, since:"2021", scope:"Phased through state expertise system",                 maturity:50, bsi:false, iso19650:"Partial" },
+  { iso:"AU", name:"Australia",      region:"Asia-Pacific", lat:-25.5,lon:134,   stage:1, since:"—",    scope:"State-level transport mandates (VIC, NSW, QLD); no federal", maturity:78, bsi:true, iso19650:"Adopted" },
+  { iso:"NZ", name:"New Zealand",    region:"Asia-Pacific", lat:-41.5,lon:172.8, stage:1, since:"—",    scope:"BIM Acceleration Committee handbook",                   maturity:70, bsi:true,  iso19650:"Adopted" },
+  { iso:"US", name:"United States",  region:"Americas", lat:39.5, lon:-98.5, stage:1, since:"2007", scope:"Agency-level (GSA, USACE); no national mandate",            maturity:82, bsi:true,  iso19650:"Partial" },
+  { iso:"CA", name:"Canada",         region:"Americas", lat:56,   lon:-106,  stage:1, since:"—",    scope:"National strategy, client-level requirements",              maturity:74, bsi:true,  iso19650:"Adopted" },
+  { iso:"MX", name:"Mexico",         region:"Americas", lat:23.5, lon:-102,  stage:1, since:"—",    scope:"MRO strategy for public works",                             maturity:52, bsi:false, iso19650:"Partial" },
+  { iso:"BR", name:"Brazil",         region:"Americas", lat:-10,  lon:-52,   stage:2, since:"2021", scope:"Decree 10.306: federal works phased 2021 → 2028",           maturity:61, bsi:true,  iso19650:"Partial" },
+  { iso:"CL", name:"Chile",          region:"Americas", lat:-33.5,lon:-70.9, stage:2, since:"2020", scope:"Planbim: public institutions phased",                       maturity:66, bsi:false, iso19650:"Partial" },
+  { iso:"PE", name:"Peru",           region:"Americas", lat:-9.5, lon:-75,   stage:2, since:"2019", scope:"Plan BIM Perú: public investment by 2030",                  maturity:58, bsi:false, iso19650:"Partial" },
+  { iso:"CO", name:"Colombia",       region:"Americas", lat:4.5,  lon:-73,   stage:1, since:"—",    scope:"National strategy 2020–2026",                               maturity:54, bsi:false, iso19650:"Partial" },
+  { iso:"AR", name:"Argentina",      region:"Americas", lat:-35,  lon:-64.5, stage:1, since:"—",    scope:"SIBIM programme",                                           maturity:50, bsi:false, iso19650:"—" },
+  { iso:"UY", name:"Uruguay",        region:"Americas", lat:-32.8,lon:-56,   stage:1, since:"—",    scope:"Public agency roadmap",                                     maturity:48, bsi:false, iso19650:"—" },
+  { iso:"EC", name:"Ecuador",        region:"Americas", lat:-1.5, lon:-78.5, stage:0, since:"—",    scope:"No national programme tracked",                             maturity:35, bsi:false, iso19650:"—" },
+];
+const REGIONS = ["All", "Europe", "Asia-Pacific", "Americas", "Middle East & Africa"];
+
+/* ================= Projection & basemap ================= */
+const LON0 = -180, LON1 = 180, LAT0 = -57, LAT1 = 84;
+const MAPW = 1060, MAPH = Math.round(MAPW * (LAT1 - LAT0) / 360 * 0.98);
+const projX = lon => (lon - LON0) / (LON1 - LON0) * MAPW;
+const projY = lat => (LAT1 - lat) / (LAT1 - LAT0) * MAPH;
+
+function inPoly(lon, lat, poly) {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i], [xj, yj] = poly[j];
+    if ((yi > lat) !== (yj > lat) && lon < (xj - xi) * (lat - yi) / (yj - yi) + xi)
+      inside = !inside;
+  }
+  return inside;
+}
+const bboxes = polys => polys.map(p => {
+  let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+  for (const [x, y] of p) { x0 = Math.min(x0,x); x1 = Math.max(x1,x); y0 = Math.min(y0,y); y1 = Math.max(y1,y); }
+  return [x0, x1, y0, y1];
+});
+const LAND_BB = bboxes(LAND), SEAS_BB = bboxes(SEAS);
+
+const landDots = [];
+(function buildDots() {
+  const step = 1.45;
+  let row = 0;
+  for (let lat = LAT0 + step / 2; lat < LAT1; lat += step, row++) {
+    const off = (row % 2) * step / 2;                 // stagger for a woven look
+    for (let lon = LON0 + off; lon < LON1; lon += step) {
+      let hit = false;
+      for (let k = 0; k < LAND.length && !hit; k++) {
+        const b = LAND_BB[k];
+        if (lon >= b[0] && lon <= b[1] && lat >= b[2] && lat <= b[3] && inPoly(lon, lat, LAND[k])) hit = true;
+      }
+      if (!hit) continue;
+      let sea = false;
+      for (let k = 0; k < SEAS.length && !sea; k++) {
+        const b = SEAS_BB[k];
+        if (lon >= b[0] && lon <= b[1] && lat >= b[2] && lat <= b[3] && inPoly(lon, lat, SEAS[k])) sea = true;
+      }
+      if (!sea) landDots.push([projX(lon), projY(lat)]);
+    }
+  }
+})();
+
+const canvas = document.getElementById("basemap");
+function drawBasemap() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = MAPW * dpr; canvas.height = MAPH * dpr;
+  canvas.style.aspectRatio = `${MAPW} / ${MAPH}`;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, MAPW, MAPH);
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--dot").trim();
+  for (const [x, y] of landDots) {
+    ctx.beginPath();
+    ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+/* ================= State ================= */
+let view = "integrated";
+let region = "All";
+let selected = null;
+
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const stageColor = s => css(`--stage${s}`);
+function hexToRgb(h) { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+function seqColor(t) { // t in [0,1] between --seq-lo and --seq-hi
+  const a = hexToRgb(css("--seq-lo")), b = hexToRgb(css("--seq-hi"));
+  const c = a.map((v, i) => Math.round(v + (b[i] - v) * t));
+  return `rgb(${c[0]},${c[1]},${c[2]})`;
+}
+const visible = () => DATA.filter(d => region === "All" || d.region === region);
+const radiusFor = d => view === "mandates" ? 6 : 4.5 + (d.maturity / 100) * 6.5;
+const colorFor  = d => view === "metrics" ? seqColor(d.maturity / 100) : stageColor(d.stage);
+
+/* Relax marker positions so dense clusters (Europe) stay readable */
+function layoutMarkers(list) {
+  const pts = list.map(d => {
+    const x = projX(d.lon), y = projY(d.lat);
+    return { d, x, y, ax: x, ay: y, r: radiusFor(d) };
+  });
+  for (let it = 0; it < 80; it++) {
+    for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
+      const a = pts[i], b = pts[j];
+      const dx = b.x - a.x, dy = b.y - a.y;
+      const dist = Math.hypot(dx, dy) || 0.01;
+      const min = a.r + b.r + 2;
+      if (dist < min) {
+        const push = (min - dist) / 2, ux = dx / dist, uy = dy / dist;
+        a.x -= ux * push; a.y -= uy * push;
+        b.x += ux * push; b.y += uy * push;
+      }
+    }
+    // markers must stay recognisably on their country: cap drift from the anchor
+    for (const p of pts) {
+      const dx = p.x - p.ax, dy = p.y - p.ay;
+      const dist = Math.hypot(dx, dy), cap = p.r + 11;
+      if (dist > cap) { p.x = p.ax + dx / dist * cap; p.y = p.ay + dy / dist * cap; }
+    }
+  }
+  return pts;
+}
+
+/* ================= Map markers ================= */
+const svgNS = "http://www.w3.org/2000/svg";
+const markersSvg = document.getElementById("markers");
+const tooltip = document.getElementById("tooltip");
+const maparea = document.getElementById("maparea");
+
+function renderMarkers() {
+  markersSvg.setAttribute("viewBox", `0 0 ${MAPW} ${MAPH}`);
+  markersSvg.innerHTML = "";
+  const pts = layoutMarkers(visible());
+  pts.sort((a, b) => b.r - a.r);                       // big behind, small in front
+  for (const p of pts) {
+    const g = document.createElementNS(svgNS, "g");
+    const c = document.createElementNS(svgNS, "circle");
+    c.setAttribute("cx", p.x); c.setAttribute("cy", p.y); c.setAttribute("r", p.r);
+    c.setAttribute("fill", colorFor(p.d));
+    c.setAttribute("stroke", css("--ring"));
+    c.setAttribute("stroke-width", "2");
+    c.style.cursor = "pointer";
+    c.setAttribute("tabindex", "0");
+    c.setAttribute("role", "img");
+    c.setAttribute("aria-label",
+      `${p.d.name}: ${STAGES[p.d.stage].label}, maturity ${p.d.maturity}`);
+    const show = () => showTooltip(p);
+    const hide = () => tooltip.classList.remove("show");
+    c.addEventListener("pointerenter", show);
+    c.addEventListener("focus", show);
+    c.addEventListener("pointerleave", hide);
+    c.addEventListener("blur", hide);
+    c.addEventListener("click", () => { selected = p.d; renderDetail(); });
+    c.addEventListener("keydown", e => { if (e.key === "Enter") { selected = p.d; renderDetail(); } });
+    g.appendChild(c);
+    markersSvg.appendChild(g);
+  }
+}
+
+function showTooltip(p) {
+  tooltip.innerHTML = `
+    <div class="t-name">${p.d.name}</div>
+    <div class="t-stage"><span class="sw" style="background:${stageColor(p.d.stage)}"></span>${STAGES[p.d.stage].label}${p.d.since !== "—" ? " · " + p.d.since : ""}</div>
+    <div class="t-meta">${p.d.scope}</div>
+    <div class="t-metric">Maturity ${p.d.maturity} / 100 (illustrative) · click for detail</div>`;
+  const rect = maparea.getBoundingClientRect();
+  const sx = rect.width / MAPW;
+  let x = p.x * sx + 14, y = p.y * sx * (MAPH / MAPH) - 10;
+  tooltip.style.left = "0px"; tooltip.style.top = "0px";
+  tooltip.classList.add("show");
+  const tw = tooltip.offsetWidth, th = tooltip.offsetHeight;
+  y = p.y * (rect.height / MAPH) - th / 2;
+  if (x + tw > rect.width - 8) x = p.x * sx - tw - 14;
+  x = Math.max(4, Math.min(x, rect.width - tw - 4));
+  y = Math.max(4, Math.min(y, rect.height - th - 4));
+  tooltip.style.left = x + "px"; tooltip.style.top = y + "px";
+}
+
+/* ================= Legend / detail / controls ================= */
+function renderLegend() {
+  const el = document.getElementById("maplegend");
+  let html = "";
+  if (view !== "metrics") {
+    for (let s = 3; s >= 0; s--)
+      html += `<div class="row"><span class="sw" style="background:${stageColor(s)}"></span>${STAGES[s].label}</div>`;
+  }
+  if (view === "metrics")
+    html += `<div class="row"><span>Maturity</span><span class="gradbar"></span></div>
+             <div class="row sizecue"><span>0</span><span style="flex:1"></span><span>100</span></div>`;
+  if (view === "integrated")
+    html += `<div class="row sizecue">size = maturity score</div>`;
+  el.innerHTML = html;
+}
+
+function renderDetail() {
+  const el = document.getElementById("detail");
+  if (!selected) { el.classList.remove("show"); el.innerHTML = ""; return; }
+  const d = selected;
+  el.innerHTML = `
+    <div class="d-head">
+      <h3>${d.name}</h3>
+      <span class="stagepill"><span class="sw" style="background:${stageColor(d.stage)}"></span>${STAGES[d.stage].label}</span>
+      <button class="d-close" aria-label="Close detail">✕ close</button>
+    </div>
+    <dl class="d-grid">
+      <div><dt>Mandate scope</dt><dd>${d.scope}</dd></div>
+      <div><dt>In effect since</dt><dd>${d.since}</dd></div>
+      <div><dt>openBIM maturity (illustrative)</dt><dd>${d.maturity} / 100</dd></div>
+      <div><dt>buildingSMART chapter</dt><dd>${d.bsi ? "Yes" : "No"}</dd></div>
+      <div><dt>ISO 19650 adoption</dt><dd>${d.iso19650}</dd></div>
+      <div><dt>Region</dt><dd>${d.region}</dd></div>
+    </dl>`;
+  el.classList.add("show");
+  el.querySelector(".d-close").addEventListener("click", () => { selected = null; renderDetail(); });
+}
+
+document.getElementById("viewSeg").addEventListener("click", e => {
+  const b = e.target.closest("button[data-view]");
+  if (!b) return;
+  view = b.dataset.view;
+  for (const btn of document.querySelectorAll("#viewSeg button"))
+    btn.setAttribute("aria-pressed", String(btn === b));
+  renderMarkers(); renderLegend();
+});
+
+(function buildRegionChips() {
+  const el = document.getElementById("regionChips");
+  for (const r of REGIONS) {
+    const b = document.createElement("button");
+    b.className = "chip";
+    b.textContent = r;
+    b.setAttribute("aria-pressed", String(r === region));
+    b.addEventListener("click", () => {
+      region = r;
+      for (const c of el.children) c.setAttribute("aria-pressed", String(c === b));
+      if (selected && !visible().includes(selected)) { selected = null; renderDetail(); }
+      renderMarkers(); renderStrip(); renderTiles();
+    });
+    el.appendChild(b);
+  }
+})();
+
+/* ================= Correlation strip plot ================= */
+function jitter(iso) { // deterministic per-country jitter
+  let h = 0;
+  for (const ch of iso) h = (h * 31 + ch.charCodeAt(0)) % 997;
+  return (h / 997) - 0.5;
+}
+
+function renderStrip() {
+  const svg = document.getElementById("strip");
+  const list = visible();
+  const W = 1020, ROWH = 64, PADL = 190, PADR = 40, PADT = 30, PADB = 34;
+  const H = PADT + ROWH * 4 + PADB;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("width", W); svg.removeAttribute("height");
+  svg.style.width = "100%"; svg.style.height = "auto"; svg.style.minWidth = "680px";
+  const x = v => PADL + (v / 100) * (W - PADL - PADR);
+  let out = "";
+  // gridlines + x axis labels
+  for (const v of [0, 25, 50, 75, 100]) {
+    out += `<line x1="${x(v)}" y1="${PADT - 8}" x2="${x(v)}" y2="${H - PADB}" stroke="${css("--grid")}" stroke-width="1"/>`;
+    out += `<text x="${x(v)}" y="${H - PADB + 18}" fill="${css("--ink-muted")}" font-size="11.5" text-anchor="middle" style="font-variant-numeric:tabular-nums">${v}</text>`;
+  }
+  out += `<text x="${W - PADR}" y="${H - 6}" fill="${css("--ink-muted")}" font-size="11.5" text-anchor="end">openBIM maturity score (illustrative) →</text>`;
+  for (let s = 3; s >= 0; s--) {
+    const rowY = PADT + (3 - s) * ROWH + ROWH / 2;
+    const rows = list.filter(d => d.stage === s);
+    out += `<text x="${PADL - 14}" y="${rowY + 4}" fill="${css("--ink-2")}" font-size="13" text-anchor="end">${STAGES[s].label}</text>`;
+    out += `<line x1="${PADL}" y1="${rowY}" x2="${W - PADR}" y2="${rowY}" stroke="${css("--baseline")}" stroke-width="1"/>`;
+    if (rows.length) {
+      const avg = rows.reduce((a, d) => a + d.maturity, 0) / rows.length;
+      out += `<line x1="${x(avg)}" y1="${rowY - 18}" x2="${x(avg)}" y2="${rowY + 18}" stroke="${css("--ink-2")}" stroke-width="2"/>`;
+      out += `<text x="${x(avg)}" y="${rowY - 24}" fill="${css("--ink-2")}" font-size="11.5" text-anchor="middle" font-weight="600" style="font-variant-numeric:tabular-nums">avg ${Math.round(avg)}</text>`;
+    }
+    for (const d of rows) {
+      const cy = rowY + jitter(d.iso) * 26;
+      out += `<circle cx="${x(d.maturity)}" cy="${cy}" r="5.5" fill="${stageColor(s)}" stroke="${css("--ring")}" stroke-width="2" data-iso="${d.iso}" style="cursor:pointer"><title>${d.name} — ${d.maturity}</title></circle>`;
+    }
+  }
+  svg.innerHTML = out;
+  svg.addEventListener("click", e => {
+    const iso = e.target.getAttribute && e.target.getAttribute("data-iso");
+    if (!iso) return;
+    selected = DATA.find(d => d.iso === iso);
+    renderDetail();
+    document.getElementById("maparea").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+}
+
+function renderTiles() {
+  const list = visible();
+  const grp = s => list.filter(d => d.stage === s);
+  const avg = rows => rows.length ? Math.round(rows.reduce((a, d) => a + d.maturity, 0) / rows.length) : null;
+  const inForce = avg(grp(3)), none = avg([...grp(0), ...grp(1)]);
+  const el = document.getElementById("tiles");
+  el.innerHTML = `
+    <div class="tile"><div class="t-label">Jurisdictions tracked</div><div class="t-value">${list.length}</div><div class="t-note">${grp(3).length} with a mandate in force</div></div>
+    <div class="tile"><div class="t-label">Avg maturity · mandate in force</div><div class="t-value">${inForce ?? "—"}</div><div class="t-note">of 100, illustrative</div></div>
+    <div class="tile"><div class="t-label">Avg maturity · no mandate yet</div><div class="t-value">${none ?? "—"}</div><div class="t-note">strategy/guidelines or none</div></div>
+    <div class="tile"><div class="t-label">Mandate gap</div><div class="t-value">${inForce != null && none != null ? "+" + (inForce - none) : "—"}</div><div class="t-note">points — the correlation headline</div></div>`;
+}
+
+/* ================= Table view ================= */
+function renderTable() {
+  const t = document.getElementById("datatable");
+  let html = `<thead><tr><th>Jurisdiction</th><th>Region</th><th>Mandate stage</th><th>Since</th><th>Scope</th><th>Maturity</th><th>bSI chapter</th><th>ISO 19650</th></tr></thead><tbody>`;
+  for (const d of [...DATA].sort((a, b) => b.stage - a.stage || b.maturity - a.maturity)) {
+    html += `<tr><td><span class="sw" style="background:${stageColor(d.stage)}"></span>${d.name}</td>
+      <td>${d.region}</td><td>${STAGES[d.stage].label}</td><td>${d.since}</td>
+      <td style="white-space:normal;min-width:240px">${d.scope}</td>
+      <td class="num">${d.maturity}</td><td>${d.bsi ? "Yes" : "—"}</td><td>${d.iso19650}</td></tr>`;
+  }
+  t.innerHTML = html + "</tbody>";
+}
+
+/* ================= Boot & theme reactivity ================= */
+function renderAll() {
+  drawBasemap(); renderMarkers(); renderLegend(); renderStrip(); renderTiles(); renderTable();
+}
+renderAll();
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", renderAll);
+new MutationObserver(renderAll).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+</script>
+
+</body>
+</html>
