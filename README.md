@@ -1,10 +1,18 @@
-# openBIM Atlas — working mockup
+# The openBIM Atlas — Where Mandates Meet Business Value
 
-An interactive mockup for the openBIM data project: a bordered world map (choropleth)
-of **openBIM mandates**, overlaid with **documented business-value evidence**, and a
-panel that counts the correlation between the two.
+An interactive mockup for the openBIM data project: a **Winkel Tripel** world
+choropleth of **openBIM mandates**, overlaid with **documented business-value
+evidence**, and a panel that counts the correlation between the two. Styled to
+SBI (Strategic Building Innovation) branding — green gradient headings and a
+Century Gothic font stack — with a machine-validated green map ramp in both
+light and dark themes.
 
 **Open `index.html` in any browser.** No build step, no dependencies, no network calls.
+
+Documentation (per PacTime feedback — copies belong in the Dropbox project folder):
+- **`docs/DATA-GUIDE.md`** — how to input and source data (schema, levels, sourcing rules).
+- **`docs/TOOL.md`** — how the tool works + AI-provenance disclosure (built with
+  Claude Code; the directing prompts are documented per version).
 
 ## The story the page tells (in order)
 
