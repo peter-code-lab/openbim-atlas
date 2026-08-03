@@ -50,9 +50,10 @@ object:
 | Field | Meaning |
 |---|---|
 | `title` | Project + what was done |
-| `stat` / `statnote` | The headline number and its one-line context |
+| `kind` | Metric category: `"outcome"` (project outcome — savings, time, carbon, quality) or `"process"` (how the work was done — model counts, drawing counts). Outcome metrics are the impactful ones; cards sort outcome-first |
+| `stat` / `statnote` | The headline number and its one-line context (always shown in both the case card and the country detail card) |
 | `outcomes` | 2–3 bullet outcomes shown in the detail card |
-| `src` / `url` / `conf` | Source label, link, confidence (same scale as above) |
+| `src` / `url` / `conf` | Source label, link, confidence (same scale as above) — the label renders as a hyperlink everywhere it appears |
 
 ## Sourcing rules (agreed practice)
 
@@ -66,7 +67,26 @@ object:
 4. **Level 3 vs 2 discipline**: agency-level requirements (GSA, Statsbygg,
    Senate Properties, Rijkswaterstaat, Trafikverket…) are level 2, not 3 —
    a statutory national mandate is what earns level 3.
-5. `0` means *none found on research date* — record the search date in `note`.
+5. **Don't list empty jurisdictions.** A country with `0` on *both* dimensions
+   carries no information for readers — log it in the Source Register's
+   "searched, nothing found" section (with the search date) instead of adding
+   it to `DATA`. Add it to `DATA` only once one dimension reaches level 1+.
+
+## Verification workflow (proposed)
+
+Team decision pending — two complementary options:
+
+1. **Human sign-off**: an SBI teammate opens each claim's source link and
+   confirms the level, date and scope. Track sign-off in the Source Register
+   (add "verified by / date" to the claim's line). Claims at `c:"low"` are the
+   priority queue; `c:"medium"` next.
+2. **AI cross-check**: a second, independent AI agent re-researches each claim
+   from scratch (without seeing the recorded answer) and diffs its result
+   against `DATA`; humans adjudicate only the mismatches. This is cheap to run
+   before each release and catches drift as mandates evolve.
+
+Until a claim passes either path, the UI's confidence badges are the honest
+signal — don't remove a badge without recording who verified it and when.
 
 ## Adding a value case
 

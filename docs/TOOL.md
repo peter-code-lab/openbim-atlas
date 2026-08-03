@@ -87,6 +87,14 @@ were, in sequence:
    50 m geometry for region zooms), SBI colours and Century Gothic look,
    this documentation, and the workshop title "The openBIM Atlas: Where
    Mandates Meet Business Value".
+5. **v0.5** — team review comments: hyperlinked and uniformly styled sources;
+   detail cards always show the headline metric (smartBRIDGE consistency fix);
+   paired-distribution correlation chart with plain-language explanation;
+   outcome vs process metric categories; none-tracked jurisdictions moved to
+   the Source Register's research log; shared-folder documents generated
+   (`docs/SOURCES.md` → Source Register, `docs/PROMPTS.md` → AI Prompt Log,
+   both also produced as .docx for Google Drive upload); verification-workflow
+   proposal added to the data guide.
 
 All research claims were compiled July 2026 via web search; sources and
 confidence levels are embedded per claim in `DATA` and visible in the UI.
