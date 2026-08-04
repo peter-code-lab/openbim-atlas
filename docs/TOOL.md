@@ -95,6 +95,12 @@ were, in sequence:
    (`docs/SOURCES.md` → Source Register, `docs/PROMPTS.md` → AI Prompt Log,
    both also produced as .docx for Google Drive upload); verification-workflow
    proposal added to the data guide.
+6. **v0.6** — Morocco deep-dive on the team's tip (buildingSMART chapter exists
+   there): two research agents restored Morocco to the Atlas (ONCF LGV BIM
+   requirement; unverified ministry-circular claim flagged, not repeated), and
+   a new optional "openBIM ecosystem" section was added to country cards
+   (chapters, standards adoption, research cases). `tools/gen-sources.js` now
+   regenerates the Source Register from the dataset.
 
 All research claims were compiled July 2026 via web search; sources and
 confidence levels are embedded per claim in `DATA` and visible in the UI.

@@ -35,6 +35,7 @@ object:
 | `proc` | **Public procurement** mandate — government as *client* |
 | `perm` | **Permit approvals** mandate — government as *regulator* |
 | `cases` | Optional array of documented value cases |
+| `eco` | Optional array of **openBIM ecosystem** facts (`{note, src}`) — buildingSMART chapter status, national standards adoption (e.g. ISO 19650), notable research. Shown in the country detail card; use for context that is neither a mandate nor a quantified value case (example: Morocco) |
 
 ### Mandate object (`proc` / `perm`)
 

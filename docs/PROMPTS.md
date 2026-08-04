@@ -91,6 +91,22 @@ jurisdictions moved out of the Atlas into the Source Register's research log; th
 IDOT/PennDOT note added to the United States entry; a verification-workflow proposal
 added to `docs/DATA-GUIDE.md`.
 
+## v0.6 — Morocco deep-dive
+
+**Prompt:** "Send more agents to look into Morocco since there should be openBIM there
+— there is a buildingSMART chapter there already."
+
+**Produced:** Two additional research agents (chapter/ecosystem + French- and
+Arabic-language policy sources). Morocco restored to the Atlas as *Partial / phasing
+in* on procurement (ONCF requires BIM across the LGV Kenitra–Marrakech extension,
+Medias24 2026; a blog-reported ministry circular with a phased 2025→2030 mandate
+could not be verified in official sources and is flagged as such), permits *None
+tracked* (Rokhas.ma e-permitting is document-based). New "openBIM ecosystem" section
+on country cards, seeded with buildingSMART Morocco (first African bSI chapter, 2022;
+Marrakesh Summit 2024; bSI certification), IMANOR's NM ISO 19650-1 adoption, and the
+A7 highway IFC O&M research case. Source Register regeneration moved into the repo
+(`tools/gen-sources.js`).
+
 ---
 
 *To reproduce or extend: the full working session runs in Claude Code against the

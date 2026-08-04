@@ -232,7 +232,7 @@
 <div class="wrap">
   <header class="site">
     <span class="brand gradtext">The openBIM Atlas</span>
-    <span class="version">Working mockup · v0.5</span>
+    <span class="version">Working mockup · v0.6</span>
   </header>
   <p class="tagline">Where mandates meet business value</p>
   <p class="lede">
@@ -484,6 +484,19 @@ const DATA = [
       src:{t:"BIM law and regulation in the UAE — CMS Expert Guide", u:"https://cms.law/en/int/expert-guides/cms-expert-guide-to-building-information-modelling-bim/united-arab-emirates", c:"high"}},
     perm:{l:2, since:"2024", note:"Dubai: IFC BIM permit submission mandatory for tall/large/special buildings from 1 Jan 2024 (ISO 19650/IFC/IDS/BCF)",
       src:{t:"Global openBIM Mandates 2025 — buildingSMART International", u:"https://www.buildingsmart.org/wp-content/uploads/2025/03/IFC-Mandate_2025.pdf", c:"high"}} },
+  { iso:"MA", id:"504", name:"Morocco", region:"Middle East & Africa", lat:31.8, lon:-6.5,
+    proc:{l:2, since:"2026", note:"State clients impose BIM contractually on flagship projects — ONCF requires BIM management across the LGV Kenitra–Marrakech high-speed rail extension. A blog-reported ministry circular phasing in a public-works BIM mandate (2025→2030) could not be verified in any official source",
+      src:{t:"LGV Kenitra–Marrakech: déploiement du BIM — Medias24", u:"https://medias24.com/2026/05/02/lgv-kenitra-marrakech-deux-entreprises-retenues-pour-le-deploiement-du-bim-1669353/", c:"high"}},
+    perm:{l:0, note:"Permits fully dematerialised nationwide via Rokhas.ma since 2019, but document-based — no BIM/IFC component or roadmap found",
+      src:{t:"Rokhas.ma dématérialise les procédures — LesEco.ma", u:"https://leseco.ma/maroc/autorisations-economiques-et-durbanisme-rokhas-ma-dematerialise-les-procedures.html", c:"medium"}},
+    eco:[
+      {note:"buildingSMART Morocco — the first African bSI chapter (incorporated 2022, 'developing chapter' status, chaired by Dr. Youssef El Ganadi); hosted the buildingSMART International Summit in Marrakesh (Oct 2024), delivers bSI Professional Certification and runs the FNP BIM professional forum",
+        src:{t:"bSI Chapter Directory — buildingSMART Morocco", u:"https://www.buildingsmart.org/community/chapter-directory/buildingsmart-morocco/", c:"high"}},
+      {note:"IMANOR has adopted ISO 19650-1 as national standard NM ISO 19650-1",
+        src:{t:"NM ISO 19650-1 — IMANOR", u:"https://www.imanor.gov.ma/Norme/nm-iso-19650-1/", c:"high"}},
+      {note:"Research: IFC schema extension (IFCInfra4OM) validated for road operation & maintenance on the A7 Agadir–Marrakech highway (ADM) — methodological result, no quantified savings yet",
+        src:{t:"ISPRS Int. J. Geo-Inf. (MDPI)", u:"https://www.mdpi.com/2220-9964/10/8/496", c:"high"}},
+    ] },
   { iso:"SA", id:"682", name:"Saudi Arabia", region:"Middle East & Africa", lat:24, lon:45,
     proc:{l:2, note:"MOMRAH BIM Level 2 on major public projects; giga-project clients require ISO 19650 contractually",
       src:{t:"Saudi Arabia BIM and Vision 2030 — OmTrak", u:"https://www.omtrak.com/en-ae/saudi-arabia-bim-mandate-vision-2030/", c:"low"}},
@@ -820,6 +833,9 @@ function renderDetail() {
     <dl class="d-grid">
       ${block("Public procurement (government as client)", d.proc)}
       ${block("Permit approvals (government as regulator)", d.perm)}
+      ${(d.eco || []).map(e => `
+        <div><dt>openBIM ecosystem</dt>
+        <dd><div style="font-size:13px;color:var(--ink-2)">${e.note}</div>${srcLine(e.src)}</dd></div>`).join("")}
       ${(d.cases || []).map(c => `
         <div><dt>Documented value <span class="kind ${c.kind}">${c.kind === "outcome" ? "Project outcome" : "Process metric"}</span></dt>
         <dd><strong>${c.title}</strong>

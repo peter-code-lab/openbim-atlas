@@ -1,6 +1,6 @@
 # The openBIM Atlas — Source Register
 
-Every data claim on the Atlas and where it comes from. Generated from the Atlas dataset on 2026-08-03 — regenerate whenever the data changes (see docs/TOOL.md). A copy of this document belongs in the shared project folder (Google Drive / Dropbox).
+Every data claim on the Atlas and where it comes from. Generated from the Atlas dataset on 2026-08-04 by `tools/gen-sources.js` — regenerate whenever the data changes. A copy of this document belongs in the shared project folder (Google Drive / Dropbox).
 
 Confidence key: **high** = official decree, circular or programme page · **medium** = reputable secondary source (badge "secondary source" in the UI) · **low** = unconfirmed (badge "needs verification").
 
@@ -210,6 +210,13 @@ Confidence key: **high** = official decree, circular or programme page · **medi
 - Public procurement: Partial / phasing in (since 2013) — No federal mandate; Dubai and other emirate/government clients require BIM on major projects (DM circulars 196/2013, 207/2015) — Source: [BIM law and regulation in the UAE — CMS Expert Guide](https://cms.law/en/int/expert-guides/cms-expert-guide-to-building-information-modelling-bim/united-arab-emirates) _(confidence: high)_
 - Permit approvals: Partial / phasing in (since 2024) — Dubai: IFC BIM permit submission mandatory for tall/large/special buildings from 1 Jan 2024 (ISO 19650/IFC/IDS/BCF) — Source: [Global openBIM Mandates 2025 — buildingSMART International](https://www.buildingsmart.org/wp-content/uploads/2025/03/IFC-Mandate_2025.pdf) _(confidence: high)_
 
+**Morocco**
+- Public procurement: Partial / phasing in (since 2026) — State clients impose BIM contractually on flagship projects — ONCF requires BIM management across the LGV Kenitra–Marrakech high-speed rail extension. A blog-reported ministry circular phasing in a public-works BIM mandate (2025→2030) could not be verified in any official source — Source: [LGV Kenitra–Marrakech: déploiement du BIM — Medias24](https://medias24.com/2026/05/02/lgv-kenitra-marrakech-deux-entreprises-retenues-pour-le-deploiement-du-bim-1669353/) _(confidence: high)_
+- Permit approvals: None tracked — Permits fully dematerialised nationwide via Rokhas.ma since 2019, but document-based — no BIM/IFC component or roadmap found — Source: [Rokhas.ma dématérialise les procédures — LesEco.ma](https://leseco.ma/maroc/autorisations-economiques-et-durbanisme-rokhas-ma-dematerialise-les-procedures.html) _(confidence: medium)_
+- Ecosystem: buildingSMART Morocco — the first African bSI chapter (incorporated 2022, 'developing chapter' status, chaired by Dr. Youssef El Ganadi); hosted the buildingSMART International Summit in Marrakesh (Oct 2024), delivers bSI Professional Certification and runs the FNP BIM professional forum — Source: [bSI Chapter Directory — buildingSMART Morocco](https://www.buildingsmart.org/community/chapter-directory/buildingsmart-morocco/) _(confidence: high)_
+- Ecosystem: IMANOR has adopted ISO 19650-1 as national standard NM ISO 19650-1 — Source: [NM ISO 19650-1 — IMANOR](https://www.imanor.gov.ma/Norme/nm-iso-19650-1/) _(confidence: high)_
+- Ecosystem: Research: IFC schema extension (IFCInfra4OM) validated for road operation & maintenance on the A7 Agadir–Marrakech highway (ADM) — methodological result, no quantified savings yet — Source: [ISPRS Int. J. Geo-Inf. (MDPI)](https://www.mdpi.com/2220-9964/10/8/496) _(confidence: high)_
+
 **Saudi Arabia**
 - Public procurement: Partial / phasing in — MOMRAH BIM Level 2 on major public projects; giga-project clients require ISO 19650 contractually — Source: [Saudi Arabia BIM and Vision 2030 — OmTrak](https://www.omtrak.com/en-ae/saudi-arabia-bim-mandate-vision-2030/) _(confidence: low)_
 - Permit approvals: None tracked
@@ -286,7 +293,6 @@ These jurisdictions were researched and no national openBIM/BIM programme or man
 
 - **Ecuador** — no government BIM strategy found; industry-led BIM Forum Ecuador only ([Global BIM Network](https://globalbim.org/info-collection/bim-forum-ecuador/))
 - **Egypt** — no national programme found; BIM used on megaprojects by client choice
-- **Morocco** — no national programme found
 - **Nigeria** — no approved national BIM policy found
 - **Kenya** — no mandate found
 - **Ghana** — no national programme found; the 2018 Building Code (GS1207) has no BIM/IFC requirement
