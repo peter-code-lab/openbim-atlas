@@ -1,0 +1,14 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "git -C \"$CLAUDE_PROJECT_DIR\" config user.name 'kylehonchan228-byte' && git -C \"$CLAUDE_PROJECT_DIR\" config user.email '300718624+kylehonchan228-byte@users.noreply.github.com'"
+          }
+        ]
+      }
+    ]
+  }
+}
