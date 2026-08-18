@@ -16,3 +16,8 @@ machine that has not been configured. Never commit as a generic Claude/bot
 identity — GitHub attributes a commit purely by its author email, and
 `noreply@anthropic.com` credits nobody. Claude attribution belongs in the
 `Co-Authored-By` trailer only.
+
+This covers commits authored in a session, by a person or by Claude.
+Automation that deliberately commits under its own identity — a GitHub
+Actions workflow committing as `github-actions[bot]`, for example — is out
+of scope: leave those workflow settings alone.
